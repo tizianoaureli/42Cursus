@@ -4,7 +4,7 @@ OBJ				= $(SRCS:.cpp=.o)
 CC				= clang++
 RM				= rm -f
 CFLAGS			= -Wall -Wextra -Werror
-NAME			= Fixed0
+NAME			= main
 
 %.o:			%.cpp
 				$(CC) $(CFLAGS) -c $< -o $@
