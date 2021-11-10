@@ -1,18 +1,17 @@
 #include "ClapTrap.hpp"
 
-ClapTrap::ClapTrap()
-{
-    std::cout << "ClapTrap has been called!" << std::endl;
-}
-
 ClapTrap::ClapTrap(std::string name)
 {
-    std::cout << "ClapTrap has been called!" << std::endl;
+    std::cout << "Character: " << name << " has been created! (ClapTrap Constructor)" << std::endl;
+    this->_name = name;
+    this->_energypoints = 10;
+    this->_hitpoints = 10;
+    this->_atckdamage = 0;
 }
 
 ClapTrap::~ClapTrap()
 {
-    std::cout << "ClapTrap has been destroyed." << std::endl;
+    std::cout << this->_name << "\033[0m has vanished. (ClapTrap destructor)" << std::endl;
 }
 
 void ClapTrap::attack(std::string const & target)
