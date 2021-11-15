@@ -5,25 +5,28 @@
 
 class ClapTrap
 {
-private:
-    std::string _name;
-    int         _hitpoints;
-    int         _energypoints;
-    int         _atckdamage;
-public:
-    ClapTrap();
-    ClapTrap(std::string name);
-    ~ClapTrap();
+    private:
+        std::string _name;
+        int         _hitpoints;
+        int         _energypoints;
+        int         _atckdamage;
+    public:
+        ClapTrap();
+        ClapTrap(std::string name);
+        ClapTrap(ClapTrap &copy);
+        ~ClapTrap();
+        
+        ClapTrap &operator= (ClapTrap & uguale);
 
-    void attack(std::string const & target);
-    void takeDamage(unsigned int amount);
-    void beRepaired(unsigned int amount);
+        void attack(std::string const & target);
+        void takeDamage(unsigned int amount);
+        void beRepaired(unsigned int amount);
 
-    void setAttack(int amount);
-    int getAttack();
-    int getHitP();
-    int getEnergyH();
-    std::string getName();
+        void setAttack(int amount);
+        int getAttack();
+        int getHitP();
+        int getEnergyH();
+        std::string getName();
 };
 
 #endif

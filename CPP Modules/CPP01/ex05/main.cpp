@@ -1,12 +1,10 @@
 #include "Karen.hpp"
 
-int main()
+int main(int argc, char **argv)
 {
     Karen karen;
 
-    karen.complain("DEBUG");
-    karen.complain("INFO");
-    karen.complain("WARNING");
-    karen.complain("ERROR");
+    if(argc == 2)
+        karen.complain(argv[1]);
     return 0;
 }

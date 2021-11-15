@@ -1,11 +1,11 @@
-#include "FragTrap.hpp"
+#include "DiamondTrap.hpp"
 #include <cstdlib>
 #include <ctime>
 
 int main()
 {
-    FragTrap solaire("Solaire");
-    FragTrap lautrec("Lautrec");
+    DiamondTrap solaire("Solaire");
+    DiamondTrap lautrec("Lautrec");
     int random = 0;
 
     srand((unsigned int)time(NULL));
@@ -44,5 +44,7 @@ int main()
     }
     solaire.highFivesGuys();
     lautrec.highFivesGuys();
+    solaire.whoAmI();
+    lautrec.whoAmI();
     return 0;
 }

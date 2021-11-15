@@ -5,6 +5,11 @@ ClapTrap::ClapTrap()
     std::cout << "ClapTrap has been called!" << std::endl;
 }
 
+ClapTrap::ClapTrap(ClapTrap &copy)
+{
+	*this = copy;
+}
+
 ClapTrap::ClapTrap(std::string name)
 {
     std::cout << "ClapTrap has been called!" << std::endl;
@@ -13,6 +18,16 @@ ClapTrap::ClapTrap(std::string name)
 ClapTrap::~ClapTrap()
 {
     std::cout << "ClapTrap has been destroyed." << std::endl;
+}
+
+ClapTrap & ClapTrap::operator= (ClapTrap &uguale)
+{
+	this->_name = uguale._name;
+	this->_hitpoints = uguale._hitpoints;
+	this->_energypoints = uguale._energypoints;
+	this->_atckdamage = uguale._atckdamage;
+
+	return(*this);
 }
 
 void ClapTrap::attack(std::string const & target)

@@ -2,9 +2,13 @@
 
 ClapTrap::ClapTrap()
 {
+    this->_name = "Geroboamo";
+    this->_energypoints = 10;
+    this->_hitpoints = 10;
+    this->_atckdamage = 0;
 }
 
-ClapTrap::ClapTrap(std::string name)
+ClapTrap::ClapTrap(const std::string name)
 {
     std::cout << "Character: " << name << " has been created! (ClapTrap Constructor)" << std::endl;
     this->_name = name;
@@ -13,9 +17,24 @@ ClapTrap::ClapTrap(std::string name)
     this->_atckdamage = 0;
 }
 
+ClapTrap::ClapTrap(ClapTrap &copy)
+{
+	*this = copy;
+}
+
 ClapTrap::~ClapTrap()
 {
     std::cout << this->_name << "\033[0m has vanished. (ClapTrap destructor)" << std::endl;
+}
+
+ClapTrap & ClapTrap::operator= (ClapTrap &uguale)
+{
+	this->_name = uguale._name;
+	this->_hitpoints = uguale._hitpoints;
+	this->_energypoints = uguale._energypoints;
+	this->_atckdamage = uguale._atckdamage;
+
+	return(*this);
 }
 
 void ClapTrap::attack(std::string const & target)

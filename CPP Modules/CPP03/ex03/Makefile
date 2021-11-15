@@ -1,9 +1,9 @@
-SRCS			= main.cpp ClapTrap.cpp FragTrap.cpp
+SRCS			= main.cpp ClapTrap.cpp FragTrap.cpp ScavTrap.cpp DiamondTrap.cpp
 OBJ				= $(SRCS:.cpp=.o)
 
 CC				= clang++
 RM				= rm -f
-CFLAGS			= -Wall -Wextra -Werror
+CFLAGS			= -Wall -Wextra -Werror -Wshadow -Wno-shadow
 NAME			= main
 
 %.o:			%.cpp

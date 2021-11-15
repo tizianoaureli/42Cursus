@@ -9,9 +9,13 @@ private:
 public:
     FragTrap();
     FragTrap(std::string name);
+    FragTrap(FragTrap & copy);
     ~FragTrap();
 
+    FragTrap &operator= (FragTrap & uguale);
+
     void highFivesGuys(void);
+    void attack(std::string target);
 };
 
 #endif
