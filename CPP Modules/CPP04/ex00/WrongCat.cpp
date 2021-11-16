@@ -1,28 +1,28 @@
-#include "Cat.hpp"
+#include "WrongCat.hpp"
 
-Cat::Cat()
+WrongCat::WrongCat()
 {
     std::cout << "I'm a meower!" << std::endl;
-    this->type = "Cat";
+    this->type = "WrongCat";
 }
 
-Cat::Cat(Cat &copy)
+WrongCat::WrongCat(WrongCat &copy)
 {
     *this = copy;
 }
 
-Cat::~Cat()
+WrongCat::~WrongCat()
 {
     std::cout << "Feed me and leave me be, meower!" << std::endl;
 }
 
-Cat & Cat::operator=(Cat &uguale)
+WrongCat & WrongCat::operator=(WrongCat &uguale)
 {
     this->type = uguale.type;
     return(*this);
 }
 
-void Cat::makeSound() const
+void WrongCat::makeSound() const
 {
     std::cout << "Meow moew mothaf- *hissing*" << std::endl;
     return ;

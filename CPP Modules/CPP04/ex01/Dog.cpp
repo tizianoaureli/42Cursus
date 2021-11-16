@@ -4,11 +4,15 @@ Dog::Dog()
 {
     std::cout << "I'm a woofer!" << std::endl;
     this->type = "Dog";
+    this->instance = new Brain();
 }
 
 Dog::Dog(Dog &copy)
 {
-    *this = copy;
+    std::cout << "I'm the copy_woofer!" << std::endl;
+    delete this->instance;
+	instance = new Brain(*copy.instance);
+    type = copy.getType();
 }
 
 Dog::~Dog()

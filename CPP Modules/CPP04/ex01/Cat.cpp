@@ -4,11 +4,15 @@ Cat::Cat()
 {
     std::cout << "I'm a meower!" << std::endl;
     this->type = "Cat";
+    this->instance = new Brain();
 }
 
 Cat::Cat(Cat &copy)
 {
-    *this = copy;
+    std::cout << "I'm the copy_meower!" << std::endl;
+    delete this->instance;
+	instance = new Brain(*copy.instance);
+    type = copy.getType();
 }
 
 Cat::~Cat()

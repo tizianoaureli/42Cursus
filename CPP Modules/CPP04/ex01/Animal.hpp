@@ -10,7 +10,7 @@ class Animal
 	public:
 		Animal();
 		Animal(Animal &copy);
-		~Animal();
+		virtual ~Animal();
 
 		Animal          &operator= (Animal & uguale);
 		virtual void    makeSound() const;
