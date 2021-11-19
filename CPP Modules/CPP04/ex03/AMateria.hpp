@@ -2,6 +2,9 @@
 #define AMATERIA_HPP
 #include <iostream>
 #include <string>
+#include "ICharacter.hpp"
+
+class ICharacter;
 
 class AMateria
 {
@@ -11,7 +14,7 @@ public:
     AMateria();
     AMateria(std::string const & type);
     AMateria(AMateria &copy);
-    ~AMateria();
+    virtual ~AMateria();
 
     AMateria          &operator= (AMateria & uguale);
 
