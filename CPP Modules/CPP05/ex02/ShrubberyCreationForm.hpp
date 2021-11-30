@@ -14,7 +14,7 @@ public:
     ShrubberyCreationForm(ShrubberyCreationForm const &copy);
 
     ShrubberyCreationForm   &operator=(ShrubberyCreationForm & uguale);
-    void                    execute(Bureaucrat const & executor);
+    void                    _execute(Bureaucrat const & executor);
 };
 
 #endif

@@ -1,10 +1,10 @@
-SRCS			= main.cpp AMateria.cpp ICharacter.cpp IMateriaSource.cpp
+SRCS			= main.cpp Ice.cpp Cure.cpp AMateria.cpp Character.cpp MateriaSource.cpp
 OBJ				= $(SRCS:.cpp=.o)
 
 CC				= clang++
 RM				= rm -f
-CFLAGS			= -Wall -Wextra -Werror -Wshadow -Wno-shadow
-NAME			= main
+CFLAGS			= -Wall -Wextra -Werror
+NAME			= Amateria
 
 %.o:			%.cpp
 				$(CC) $(CFLAGS) -c $< -o $@

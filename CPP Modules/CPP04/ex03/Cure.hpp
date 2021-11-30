@@ -13,13 +13,4 @@ class Cure : public AMateria
 		void use(ICharacter& target);
 };
 
-class Cure
-{
-private:
-	/* data */
-public:
-	Cure(/* args */);
-	~Cure();
-};
-
 #endif

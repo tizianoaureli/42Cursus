@@ -36,7 +36,7 @@ public:
     int                 getGradeExec() const;
     bool                getSigned() const;
     void                beSigned(Bureaucrat const &bureaucrat);
-    void                _execute(Bureaucrat const & executor);
+    virtual void        _execute(Bureaucrat const & executor) = 0;
 };
 
 std::ostream &operator<<(std::ostream &out, Form const &form);
