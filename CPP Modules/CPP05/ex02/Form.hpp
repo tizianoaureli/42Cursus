@@ -10,7 +10,7 @@ class Form
 protected:
     Form();
 
-    std::string const   &_name;
+    std::string const   _name;
     int const           _gradeToSign;
     int const           _gradeToExec;
     bool                _signed;
@@ -36,9 +36,9 @@ public:
     int                 getGradeExec() const;
     bool                getSigned() const;
     void                beSigned(Bureaucrat const &bureaucrat);
-    virtual void        _execute(Bureaucrat const & executor) = 0;
+    virtual void        _execute(Bureaucrat const & executor) const = 0;
 };
 
-std::ostream &operator<<(std::ostream &out, Form const &form);
+std::ostream& operator<<(std::ostream & os, Form const & i);
 
 #endif

@@ -8,12 +8,13 @@ class PresidentialPardonForm: public Form
 private:
     std::string target;
 public:
-    PresidentialPardonForm();
+    PresidentialPardonForm(std::string const &target);
     virtual ~PresidentialPardonForm();
     PresidentialPardonForm(PresidentialPardonForm const &copy);
 
-    PresidentialPardonForm  &operator=(PresidentialPardonForm & uguale);
-    void                    _execute(Bureaucrat const & executor);
+    PresidentialPardonForm  &operator=(PresidentialPardonForm const & uguale);
+    void                    _execute(Bureaucrat const & executor) const;
+    std::string             getNameTarg();
 };
 
 #endif

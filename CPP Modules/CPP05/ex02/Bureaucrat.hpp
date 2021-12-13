@@ -23,6 +23,9 @@ public:
 	class GradeTooLowException: public std::exception {
 		virtual const char* what() const throw();
 	};
+    class GradeLowExecException: public std::exception {
+		virtual const char* what() const throw();
+	};
 
     Bureaucrat & operator= (const Bureaucrat &uguale);
 
@@ -32,6 +35,7 @@ public:
     void incrementGrade();
     void decrementGrade();
     void signForm(Form &form) const;
+    void executeForm(Form const & form);
 };
 
 std::ostream &operator<<(std::ostream &out, Bureaucrat const &bureaucrat);

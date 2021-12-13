@@ -3,7 +3,7 @@
 
 int main()
 {
-    //Animal a; 			//Since it's an absrtact class, it cannot be instanciated
+    //Animal a; 			//Since it's an abstract class, it cannot be instanciated
 	Cat c;
 	Dog d;
 

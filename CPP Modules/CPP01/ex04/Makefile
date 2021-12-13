@@ -1,10 +1,10 @@
-SRCS			= main.cpp
+SRCS			= main.cpp Sed.cpp
 OBJ				= $(SRCS:.cpp=.o)
 
 CC				= clang++
 RM				= rm -f
 CFLAGS			= -Wall -Wextra -Werror
-NAME			= main
+NAME			= replace
 
 %.o:			%.cpp
 				$(CC) $(CFLAGS) -c $< -o $@

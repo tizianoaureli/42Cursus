@@ -6,7 +6,7 @@ ScavTrap::ScavTrap() : ClapTrap()
 
 ScavTrap::ScavTrap(std::string name) : ClapTrap(name)
 {
-    std::cout << "Character: " << name << " has been created!" << std::endl;
+    std::cout << "ScavTrap Character: " << name << " has been created!" << std::endl;
     this->_name = name;
     this->_energypoints = 50;
     this->_hitpoints = 100;
@@ -20,7 +20,7 @@ ScavTrap::ScavTrap(ScavTrap &copy)
 
 ScavTrap::~ScavTrap()
 {
-    std::cout << this->_name << "\033[0m has vanished." << std::endl;
+    std::cout << "ScavTrap " << this->_name << "\033[0m has vanished." << std::endl;
 }
 
 ScavTrap & ScavTrap::operator= (ScavTrap &uguale)

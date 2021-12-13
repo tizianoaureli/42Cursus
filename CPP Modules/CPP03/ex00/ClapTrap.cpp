@@ -13,6 +13,10 @@ ClapTrap::ClapTrap(ClapTrap &copy)
 ClapTrap::ClapTrap(std::string name)
 {
     std::cout << "ClapTrap has been called!" << std::endl;
+    this->_name = name;
+    this->_hitpoints = 10;
+    this->_energypoints = 10;
+    this->_atckdamage = 0;
 }
 
 ClapTrap::~ClapTrap()
@@ -41,8 +45,10 @@ void ClapTrap::takeDamage(unsigned int amount)
         std::cout << "ClapTrap " << this->_name << "\033[0m has taken " << amount << " points of damage! 'Tis but a scratch!" << std::endl;
     else if(amount >= 4 && amount <= 7)
         std::cout << "ClapTrap " << this->_name << "\033[0m has taken " << amount << " points of damage! Ouch, it hurts!" << std::endl;
-    else if(amount >= 8 && amount <= 10)
+    else if(amount >= 8 && amount <= 9)
         std::cout << "ClapTrap " << this->_name << "\033[0m has taken " << amount << " points of damage! GAWD! HE NEED SOME MILK!" << std::endl;
+    else if(amount == 10)
+        std::cout << "ClapTrap " << this->_name << "\033[0m has taken " << amount << " points of damage! GAWD! HE DED!" << std::endl;
     else if(amount == 0)
         std::cout << "ClapTrap " << this->_name << "\033[0m dodged the attack!" << std::endl;
     this->_hitpoints -= amount;

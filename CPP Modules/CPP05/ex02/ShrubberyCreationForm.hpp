@@ -13,8 +13,11 @@ public:
     virtual ~ShrubberyCreationForm();
     ShrubberyCreationForm(ShrubberyCreationForm const &copy);
 
-    ShrubberyCreationForm   &operator=(ShrubberyCreationForm & uguale);
-    void                    _execute(Bureaucrat const & executor);
+    class TargetFileOpenException: public std::exception {
+		virtual const char* what() const throw();
+	};
+    ShrubberyCreationForm   &operator=(ShrubberyCreationForm const & uguale);
+    void                    _execute(Bureaucrat const & executor) const;
 };
 
 #endif

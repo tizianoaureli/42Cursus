@@ -81,7 +81,7 @@ Fixed Fixed::operator* (const Fixed &fixed)
 {
 	Fixed ret;
 
-	ret.setRawBits(((_fix >> 0) * (fixed._fix >> 0)) >> 8);
+	ret.setRawBits((_fix * fixed._fix) >> 8);
 	return(ret);
 }
 

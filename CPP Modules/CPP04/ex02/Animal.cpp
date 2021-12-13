@@ -22,12 +22,6 @@ Animal & Animal::operator=(Animal &uguale)
     return(*this);
 }
 
-void Animal::makeSound() const
-{
-    std::cout << "*Angry animal screeching*" << std::endl;
-    return ;
-}
-
 std::string Animal::getType() const
 {
     return(this->type);

@@ -3,7 +3,7 @@ OBJ				= $(SRCS:.cpp=.o)
 
 CC				= clang++
 RM				= rm -f
-CFLAGS			= -Wall -Wextra -Werror
+CFLAGS			= -Wall -Wextra -Werror -g
 NAME			= main
 
 %.o:			%.cpp

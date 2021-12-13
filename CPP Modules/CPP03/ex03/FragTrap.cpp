@@ -25,7 +25,7 @@ FragTrap::FragTrap(FragTrap & copy)
 
 FragTrap::~FragTrap()
 {
-    std::cout << this->_name << "\033[0m has vanished." << std::endl;
+    std::cout << "FragTrap " << this->_name << "\033[0m has vanished." << std::endl;
 }
 
 FragTrap & FragTrap::operator= (FragTrap &uguale)

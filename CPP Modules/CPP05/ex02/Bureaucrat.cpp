@@ -18,16 +18,22 @@ Bureaucrat::Bureaucrat(Bureaucrat const &copy): name(copy.name), grade(copy.grad
         throw Bureaucrat::GradeTooHighException();
     else if(this->grade > 150)
         throw Bureaucrat::GradeTooLowException();
+	*this = copy;
 }
 
 const char* Bureaucrat::GradeTooHighException::what() const throw()
 {
-    return "BureaucratException: Grade too High";
+    return "BureaucratException: Grade too High.";
 }
 
 const char* Bureaucrat::GradeTooLowException::what() const throw()
 {
-    return "BureaucratException: Grade too Low";
+    return "BureaucratException: Grade too Low.";
+}
+
+const char* Bureaucrat::GradeLowExecException::what() const throw()
+{
+    return "BureaucratException: Grade too Low to Execute form.";
 }
 
 Bureaucrat &Bureaucrat::operator=(Bureaucrat const &uguale)
@@ -75,4 +81,16 @@ void Bureaucrat::signForm(Form &form) const
 	else
 		std::cout << *this << " signs " << form << std::endl;
 	form.beSigned(*this);
+}
+void Bureaucrat::executeForm(Form const & form)
+{
+	try
+	{
+		form._execute(*this);
+		std::cout << this->getName() + " executes the form " + form.getName() << std::endl;
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << getName() << " cannot execute form, because " << e.what() << '\n';
+	}
 }
