@@ -2,7 +2,7 @@
 
 FragTrap::FragTrap() : ClapTrap()
 {
-    std::cout << "Character: " << this->getName() << " has been created!" << std::endl;
+    std::cout << "FT Character: " << this->getName() << " has been created!" << std::endl;
     this->_name = this->getName();
     this->_energypoints = 100;
     this->_hitpoints = 100;
@@ -11,7 +11,7 @@ FragTrap::FragTrap() : ClapTrap()
 
 FragTrap::FragTrap(std::string name) : ClapTrap(name) 
 {
-    std::cout << "Character: " << this->getName() << " has been created!" << std::endl;
+    std::cout << "FT Character: " << this->getName() << " has been created!" << std::endl;
     this->_name = name;
     this->_energypoints = 100;
     this->_hitpoints = 100;

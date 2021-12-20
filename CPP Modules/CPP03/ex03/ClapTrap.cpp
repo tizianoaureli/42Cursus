@@ -10,7 +10,7 @@ ClapTrap::ClapTrap()
 
 ClapTrap::ClapTrap(const std::string name)
 {
-    std::cout << "Character: " << name << " has been created! (ClapTrap Constructor)" << std::endl;
+    std::cout << "CT Character: " << name << " has been created! (ClapTrap Constructor)" << std::endl;
     this->_name = name;
     this->_energypoints = 10;
     this->_hitpoints = 10;

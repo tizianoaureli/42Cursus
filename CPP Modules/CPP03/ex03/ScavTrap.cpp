@@ -2,7 +2,7 @@
 
 ScavTrap::ScavTrap() : ClapTrap()
 {
-    std::cout << "Character: " << this->getName() << " has been created!" << std::endl;
+    std::cout << "ST Character: " << this->getName() << " has been created!" << std::endl;
     this->_name = this->getName();
     this->_energypoints = 50;
     this->_hitpoints = 100;
@@ -11,7 +11,7 @@ ScavTrap::ScavTrap() : ClapTrap()
 
 ScavTrap::ScavTrap(std::string name) : ClapTrap(name)
 {
-    std::cout << "Character: " << this->getName() << " has been created!" << std::endl;
+    std::cout << "ST Character: " << this->getName() << " has been created!" << std::endl;
     this->_name = name;
     this->_energypoints = 50;
     this->_hitpoints = 100;
