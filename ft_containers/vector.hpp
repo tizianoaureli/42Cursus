@@ -204,11 +204,37 @@ namespace ft{
             //Modifiers
             //Assign
             template <class InputIterator>
-             void assign (InputIterator first, InputIterator last)
-             {
-                 
-             }
+            void assign (InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
+            {
+                InputIterator tmp;
+                size_type new_size;
+                for (tmp = first; tmp != last; ++tmp)
+                    new_size++;
+                if (_begin != nullptr && _capacity != 0)
+                    _alloc.deallocate(_begin, _capacity);
+                _capacity = new_size * 2;
+                _begin = _alloc.allocate(_capacity);
+                for (size_t i = 0; first != last; first++, i++)
+                    _begin[i] = *first;
+                _size = new_size;
+            }
 
+            void assign (size_type n, const value_type& val)
+            {
+                if (this->_size < n)
+                    reserve(n);
+                for(size_t i = 0; i < n; i++)
+                    _begin[i] = val;
+            }
+
+            //Pushback
+            void push_back (const value_type& val)
+            {
+                if (this->_size + 1 > this->_capacity)
+                    reserve((_capacity + 1) * 2);
+                this->_size += 1;
+                _alloc.construct((_begin + _size - 1), val);
+            }
         protected:
             size_type       _size;
             size_type       _capacity;
