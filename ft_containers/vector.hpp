@@ -10,10 +10,10 @@
 #include "utils/iterator.hpp"
 #include "utils/enable_if.hpp"
 #include "utils/is_integral.hpp"
-#include "utils/lexicographical_compare.hpp"
+//#include "utils/lexicographical_compare.hpp"
 
 namespace ft{
-    template <class T, class Allocator = allocator<T> >
+    template <class T, class Allocator = std::allocator<T> >
     class vector
     {
         public:
@@ -83,10 +83,10 @@ namespace ft{
             //Operator=
             vector& operator= (const vector& x)
             {
-                this->_alloc = x._alloc;
-                this->_begin = x._begin;
-                this->_capacity = x._capacity;
-                this->_size = x._size;
+                _alloc = x._alloc;
+                _begin = x._begin;
+                _capacity = x._capacity;
+                _size = x._size;
                 return(*this);
             }
 
@@ -101,25 +101,25 @@ namespace ft{
             const_reverse_iterator rend() const { return(reverse_iterator(_begin)); }
 
             //Capacity
-            size_type size() const { return this->_size; }
+            size_type size() const { return _size; }
             size_type max_size() const { return allocator.max_size() }
             void resize (size_type n, value_type val = value_type()) 
             {
-                if(n < this->_size)
-                    for(size_t i = n; i < this->_size; i++)
+                if(n < _size)
+                    for(size_t i = n; i < _size; i++)
                         delete _begin[i];
-                else if(n > this->_size && n < this->_capacity && !val)
-                    for (size_t i = this->_size; i < n; i++)
+                else if(n > _size && n < _capacity && !val)
+                    for (size_t i = _size; i < n; i++)
                         _begin[i] = 0;
-                else if(n > this->_size && n < this->_capacity)
-                    for (size_t i = this->_size; i < n; i++)
+                else if(n > _size && n < _capacity)
+                    for (size_t i = _size; i < n; i++)
                         _begin[i] = val;
-                else if(n > this->_size && n > this->_capacity)
+                else if(n > _size && n > _capacity)
                 {
                     try
                     {
                         reserve(n);
-                        for (size_t i = this->_size; i < n; i++)
+                        for (size_t i = _size; i < n; i++)
                             _begin[i] = val;
                     }
                     catch (std::bad_alloc& ba)
@@ -127,12 +127,12 @@ namespace ft{
                         std::cerr << "bad_alloc caught: " << ba.what() << '\n';
                     }                    
                 }
-                else if(n > this->_size && n > this->_capacity && !val)
+                else if(n > _size && n > _capacity && !val)
                 {
                     try
                     {
                         reserve(n);
-                        for (size_t i = this->_size; i < n; i++)
+                        for (size_t i = _size; i < n; i++)
                             _begin[i] = 0;
                     }
                     catch (std::bad_alloc& ba)
@@ -141,11 +141,11 @@ namespace ft{
                     } 
                 }
             }
-            size_type capacity() const { return this->_capacity; }
-            bool empty() const { return(this->_size != 0 ? 1 : 0) }
+            size_type capacity() const { return _capacity; }
+            bool empty() const { return(_size != 0 ? 1 : 0) }
             void reserve (size_type n) 
             {
-                if(n > this->_capacity && _begin)                       //If vector is already allocated
+                if(n > _capacity && _begin)                       //If vector is already allocated
                 {
                     try
                     {
@@ -159,20 +159,20 @@ namespace ft{
                         _begin = _alloc.allocate(n);
                         for(size_t i = 0; i < _size; i++)
                             _begin = _alloc.construct(_begin[i], tmp[i]);
-                        this->_capacity = n;
+                        _capacity = n;
                     }
                     catch (std::bad_alloc& ba)
                     {
                         std::cerr << "bad_alloc caught: " << ba.what() << '\n';
                     }
                 }
-                else if(n > this->_capacity && !_begin)                 //If vector is not allocated
+                else if(n > _capacity && !_begin)                 //If vector is not allocated
                 {
                     try
                     {
-                        _alloc.deallocate(_begin, _capacity);
+                        //_alloc.deallocate(_begin, _capacity);         //?
                         _begin = _alloc.allocate(n);
-                        this->_capacity = n;
+                        _capacity = n;
                     }
                     catch (std::bad_alloc& ba)
                     {
@@ -182,8 +182,8 @@ namespace ft{
             }
 
             //Element access
-            reference operator[] (size_type n) { return(this->_begin[n]); }
-            const_reference operator[] (size_type n) const { return(this->_begin[n]); }
+            reference operator[] (size_type n) { return(_begin[n]); }
+            const_reference operator[] (size_type n) const { return(_begin[n]); }
             reference at (size_type n)
             {
                 if(n >= _size)
@@ -196,10 +196,10 @@ namespace ft{
                     throw(out_of_range("vector"));
                 return (_begin[n]);
             }
-            reference front() { return(this->_begin[0]); }
-            const_reference front() const { return(this->_begin[0]); }
-            reference back() { return(this->_begin[this->_size - 1]); }
-            const_reference back() const { return(this->_begin[this->_size - 1]); }
+            reference front() { return(_begin[0]); }
+            const_reference front() const { return(_begin[0]); }
+            reference back() { return(_begin[_size - 1]); }
+            const_reference back() const { return(_begin[_size - 1]); }
 
             //Modifiers
             //Assign
@@ -221,7 +221,7 @@ namespace ft{
 
             void assign (size_type n, const value_type& val)
             {
-                if (this->_size < n)
+                if (_size < n)
                     reserve(n);
                 for(size_t i = 0; i < n; i++)
                     _begin[i] = val;
@@ -230,16 +230,95 @@ namespace ft{
             //Pushback
             void push_back (const value_type& val)
             {
-                if (this->_size + 1 > this->_capacity)
+                if (_size + 1 > _capacity)
                     reserve((_capacity + 1) * 2);
-                this->_size += 1;
+                _size += 1;
                 _alloc.construct((_begin + _size - 1), val);
             }
-        protected:
-            size_type       _size;
-            size_type       _capacity;
-            pointer         _begin;
-            allocator_type  _alloc;
 
-    }
+            //Pop_back
+            void pop_back()
+            {
+                _alloca.destroy(_begin + _size - 1);
+                _size--;
+            }
+
+            //Insert
+            //Single element
+            iterator insert (iterator position, const value_type& val)
+            {
+                size_type new_capacity;
+                if (_size + 1 > _capacity)
+                    new_capacity = (_size + 1) * 2;
+                pointer new_vect = _alloc.allocate(new_capacity);
+                size_t i = 0;
+                for ( ; i != pos - 1; i++)
+                    new_vect[i] = _begin[i];
+                new_vect[i++] = val;
+                for ( ; i < _size; i++)
+                    new_vect[i] = _begin[i - 1];
+                for (size_t j = 0; j < _size; j++)
+                    delete _begin[j];
+                _alloc.deallocate(_begin, _capacity);
+                _size++;
+                if(_size > _capacity)
+                {
+                    _begin = _alloc.allocate(_size * 2);
+                    _capacity = _size * 2;
+                }
+                i = 0;
+                for ( ; i < _size; i++)
+                    _begin[i] = new_vect[i];
+                iterator it = begin();
+                for (i = 0; i != position; it++)
+                    i++;
+                return(it);
+            }
+
+            //Fill
+            void insert (iterator position, size_type n, const value_type& val)
+            {
+                for(size_t i = 0; i != n; i++)
+                    position = insert(position, val);
+            }
+
+            //Range
+            template <class InputIterator>
+            void insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
+            {
+                InputIterator iter = last;
+                InputIterator end = first;
+                iter--;
+                end--;
+                for( ; it != end; it--)
+                    insert(position, *it);
+            }
+
+            //Erase
+            //Single element
+            iterator erase (iterator position)
+            {
+                pointer new_vect = _alloc.allocaate(_size * 2);
+                for (size_t i = 0; i < _size; i++)
+                    if (i != position)
+                        new_vector[i] = _begin[i];
+                for (size_t i = 0; i < _size; i++)
+                    delete _begin[i];
+                _size--;
+                _alloc.deallocate(_begin, _capacity);
+                _begin = _alloc.allocate(_capacity);
+                for(size_t i = 0; i < _size; i++)
+                    _begin[i] = new_vect[i];
+                iterator it = begin();
+                for (size_t i = 0; i != position; it++)
+                    i++;
+                return(it);
+            }
+        protected:
+            size_type       _size;                              //It represents how many elements are in the vector
+            size_type       _capacity;                          //It represents how big the actual vector is
+            pointer         _begin;                             //Vector that we use to do various actions
+            allocator_type  _alloc;                             //Allocator that we use to allocate/deallocate/construct/etc. the vector _begin
+
+    };
 }
