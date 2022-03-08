@@ -314,6 +314,39 @@ namespace ft{
                     i++;
                 return(it);
             }
+
+            //Range
+            iterator erase (iterator first, iterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
+            {
+                size_t i = 0;
+                iterator x = first;
+                for (iterator it = first; it != last; it++)
+                    i++;
+                while(i > 0)
+                {
+                    erase(x);
+                    i--;
+                }
+                return(first);
+            }
+
+            //Swap
+            void swap (vector& x)
+            {
+                std::swap(this->_size, x._size);
+                std::swap(this->_capacity, x._capacity);
+                std::swap(this->_begin, x._begin);
+                std::swap(this->_alloc, x._alloc);
+            }
+
+            //Clear
+            void clear()
+            {
+                this->_size = 0;
+            }
+
+            //Get_allocator
+            allocator_type get_allocator() const { return this->_alloc; }
         protected:
             size_type       _size;                              //It represents how many elements are in the vector
             size_type       _capacity;                          //It represents how big the actual vector is
@@ -321,4 +354,21 @@ namespace ft{
             allocator_type  _alloc;                             //Allocator that we use to allocate/deallocate/construct/etc. the vector _begin
 
     };
+
+    //Non-member functions
+    //Relational operators
+    template <class T, class Alloc>
+        bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return(lhs == rhs); }
+    template <class T, class Alloc>
+        bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {}
+    template <class T, class Alloc>
+        bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {}
+    template <class T, class Alloc>
+        bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {}
+    template <class T, class Alloc>
+        bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {}
+    template <class T, class Alloc>
+        bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {}
+    
+    //Swap
 }
