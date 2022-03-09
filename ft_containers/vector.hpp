@@ -10,7 +10,7 @@
 #include "utils/iterator.hpp"
 #include "utils/enable_if.hpp"
 #include "utils/is_integral.hpp"
-//#include "utils/lexicographical_compare.hpp"
+#include "utils/lexicographical_compare.hpp"
 
 namespace ft{
     template <class T, class Allocator = std::allocator<T> >
@@ -358,17 +358,20 @@ namespace ft{
     //Non-member functions
     //Relational operators
     template <class T, class Alloc>
-        bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return(lhs == rhs); }
+        bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return(!ft::lexicographical_compare(lhs.beginO(), lhs.end(), rhs.begin(), rhs.end()) && \
+                                                                                    !ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.beginO(), lhs.end())); }
     template <class T, class Alloc>
-        bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {}
+        bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return(lhs != rhs); }
     template <class T, class Alloc>
-        bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {}
+        bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return(ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())); }
     template <class T, class Alloc>
-        bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {}
+        bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return(!ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end())); }
     template <class T, class Alloc>
-        bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {}
+        bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return(ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end())); }
     template <class T, class Alloc>
-        bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {}
+        bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return(!ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())); }
     
     //Swap
+    template <class T, class Alloc>
+        void swap (vector<T,Alloc>& x, vector<T,Alloc>& y) { x.swap(y); }
 }
