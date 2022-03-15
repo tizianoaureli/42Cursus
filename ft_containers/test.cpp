@@ -1,14 +1,15 @@
-//#include "map.hpp"
-#include "vector.hpp"
-//#include "stack.hpp"
+#include <map>
+#include <vector>
+#include <stack>
+#include <iostream>
 #include <fstream>
 #include <sstream>
 
-#define namespace	ft
+#define namespace	std
 
 int main()
 {
-	std::ofstream fileout ("mySTL.txt");
+	std::ofstream fileout ("originalSTL.txt");
 	fileout << "************** TESTING VECTOR **************\n" << std::endl;
 
 	namespace::vector<int> vec1(5,100);
@@ -28,8 +29,9 @@ int main()
 	fileout << "max_size : " << vec2.max_size() << std::endl;
 	for(it1 = vec2.begin(); it1 != vec2.end(); ++it1)
 		fileout << "[vec2] : " << *it1 << std::endl;
-
+	
 	fileout << "\n\nTESTING COPY COSTRUCTOR\n" << std::endl;
+
 	namespace::vector<int> vec3(vec2);
 	fileout << "Printing content: \n";
 	fileout << "size : " << vec3.size() << std::endl;
@@ -83,7 +85,7 @@ int main()
 	for(it1 = vec3.begin(); it1 != vec3.end(); ++it1)
 		fileout << "[vec3] : " << *it1 << std::endl;
 
-/*
+
 	fileout << "\n\n************** TESTING STACK **************\n" << std::endl;
 	namespace::stack<int, namespace::vector<int> > stack1 (vec2);
 
@@ -94,7 +96,7 @@ int main()
 		fileout << "[stack1] : " << stack1.top() << std::endl;
 		stack1.pop();
 	}
-	
+
 	fileout << "\n\n************** TESTING MAP **************\n" << std::endl;
 	namespace::map<int, std::string> map1;
 	map1.insert(namespace::pair<int, std::string>(1, "a"));
@@ -110,7 +112,8 @@ int main()
 	namespace::map<int, std::string>::iterator it;
 	for(it = map1.begin(); it != map1.end(); ++it)
 		fileout << "[map1] key = " << it->first << "  value = " << it->second << std::endl;
-	
+
+
 	fileout << "\n\n TESTING OPERATOR[] \n" << std::endl;
 	map1[6] = "changed";
 	map1[2] = "changed";
@@ -134,5 +137,4 @@ int main()
 	fileout << "max_size : " << map1.max_size() << std::endl;
 	for(it = map1.begin(); it != map1.end(); ++it)
 		fileout << "[map1] key = " << it->first << "  value = " << it->second << std::endl;
-	*/
 }
