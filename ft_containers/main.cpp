@@ -1,6 +1,6 @@
 //#include "map.hpp"
 #include "vector.hpp"
-//#include "stack.hpp"
+#include "stack.hpp"
 #include <fstream>
 #include <sstream>
 
@@ -83,7 +83,7 @@ int main()
 	for(it1 = vec3.begin(); it1 != vec3.end(); ++it1)
 		fileout << "[vec3] : " << *it1 << std::endl;
 
-/*
+
 	fileout << "\n\n************** TESTING STACK **************\n" << std::endl;
 	namespace::stack<int, namespace::vector<int> > stack1 (vec2);
 
@@ -94,7 +94,7 @@ int main()
 		fileout << "[stack1] : " << stack1.top() << std::endl;
 		stack1.pop();
 	}
-	
+	/*
 	fileout << "\n\n************** TESTING MAP **************\n" << std::endl;
 	namespace::map<int, std::string> map1;
 	map1.insert(namespace::pair<int, std::string>(1, "a"));

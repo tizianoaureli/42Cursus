@@ -17,6 +17,7 @@
         "memory": "cpp",
         "iostream": "cpp",
         "cstddef": "cpp",
-        "stdexcept": "cpp"
+        "stdexcept": "cpp",
+        "stack": "cpp"
     }
 }
