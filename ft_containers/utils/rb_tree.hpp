@@ -54,12 +54,83 @@ namespace ft
 		}
 		Node *sibiling()																				//Returns a Node pointer of this node's sibiling
 		{
-			if(parent && this == parent->right)
-				return (parent->left ? parent->left : nullptr);
-			else if (parent && this == parent->left)
-				return (parent->right ? parent->right : nullptr);
+			if(isRight() && parent->left)
+				return (parent->left);
+			else if (isLeft() && parent->right)
+				return (parent->right);
 		}
 	};
 
 	//Crea la classe rb_tree, scrivi anche le funzioni di map
+	template <typename T, class Allocator = std::allocator<Node<T> >, class Compare = std::less<T> >
+	class RBTree
+	{
+		public:
+			typedef T											value_type;
+			typedef Node<T>* 									node_pointer;
+			typedef Allocator									allocator_type;
+			typedef Compare										value_compare;
+			typedef typename allocator_type::reference			reference;
+			typedef typename allocator_type::const_reference	const_reference;
+			typedef typename allocator_type::size_type			size_type;
+			typedef typename allocator_type::difference_type	difference_type;
+			typedef typename allocator_type::pointer			pointer;
+			typedef typename allocator_type::const_pointer		const_pointer;
+			typedef ft::rb_tree_iterator<T>						iterator;
+			typedef ft::const_rb_tree_iterator<T>				const_iterator;
+			typedef ft::reverse_iterator<iterator>				reverse_iterator;
+			typedef ft::const_reverse_iterator<const_iterator>	const_reverse_iterator;
+			
+			RBTree(const value_compare& comp = value_compare(), const allocator_type& alloc = allocator_type()) : 
+				_root(nullptr), _begin(nullptr), _end(_begin), _alloc(alloc), _size(0), _comp(comp) 
+			{
+				_end->color = RED;
+				_end->left = nullptr;
+				_end->parent = nullptr;
+				_end->right = nullptr;
+				_end->value = NULL;
+			}
+			~RBTree() {}
+			RBTree(Node &copy) { *this = copy; }
+			RBTree& operator=(const RBTree& x)
+			{
+				if(_size != 0)
+					clear();
+				_comp = x.value_comp();
+				_alloc = x._alloc;
+				insert(x.begin(), x.end());
+				return *this;
+			}
+
+			template <class U> Node<U>* newnode(const U& value)
+			{
+				
+			}
+
+			//Iterators
+			iterator begin() const{ return iterator(_begin); }
+			const_iterator cbegin() const{ return iterator(_begin); }
+			iterator end() const{ return iterator(_end); }
+			const_iterator cend() const{ return iterator(_end); }
+			reverse_iterator rbegin() const{ return reverse_iterator(_end); }
+			reverse_iterator rend() const{ return reverse_iterator(_begin); }
+			
+			//Capacity
+			void clear()
+			{
+				
+			}
+			size_type size() const { return _size; }
+            size_type max_size() const { return (_alloc.max_size()); }
+
+			const value_compare& value_comp(){ return _comp; }
+			
+		protected:
+			node_pointer		_root;
+			node_pointer		_begin;
+			node_pointer 		_end;
+			allocator_type		_alloc;
+			value_compare		_comp;
+			size_type			_size;
+	};
 }
