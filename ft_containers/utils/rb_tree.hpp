@@ -61,7 +61,6 @@ namespace ft
 		}
 	};
 
-	//Crea la classe rb_tree, scrivi anche le funzioni di map
 	template <typename T, class Allocator = std::allocator<Node<T> >, class Compare = std::less<T> >
 	class RBTree
 	{
@@ -102,9 +101,57 @@ namespace ft
 				return *this;
 			}
 
+			void setBegin()
+			{
+				node_pointer tmp = _root;
+				while(tmp->left)
+					tmp = tmp->left;
+				_begin = tmp;
+			}
+			void setEnd()
+			{
+				node_pointer tmp = _root;
+				while(tmp->right)
+					tmp = tmp->right;
+				_end = tmp->right;
+				_end->color = BLACK;
+				_end->parent = tmp;
+				_end->value = NULL;
+				_end->right = nullptr;
+				_end->left = nullptr;2
+			}
 			template <class U> Node<U>* newnode(const U& value)
 			{
-				
+				Node<U> *a = _alloc.allocate(1);
+				Node<U> n(value);
+				_alloc.construct(a, n);
+				return (a);
+			}
+
+			template <class U> Node<U>* tree_min()
+			{
+				node_pointer tmp = _root;
+				while(tmp->left)
+					tmp = tmp->left;
+				return (tmp);
+			}
+
+			template <class U> Node<U>* tree_next(node_pointer x)
+			{
+				if(x->right)
+					return tree_min(x->right)
+				else if(x->isThisRightC())
+					x = x->parent;
+				return static_cast<node_pointer>(x);
+			}
+
+			template <class U> Node<U>* tree_prev(node_pointer x)
+			{
+				if(x->left)
+					return tree_max(x->left)
+				else if(x->isThisLeftC())
+					x = x->parent;
+				return static_cast<node_pointer>(x);
 			}
 
 			//Iterators
