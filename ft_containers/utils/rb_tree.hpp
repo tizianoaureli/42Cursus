@@ -128,6 +128,8 @@ namespace ft
 				return (a);
 			}
 
+			void	setRoot(node_pointer x) { _root = x; };
+
 			template <class U> Node<U>* tree_min()
 			{
 				node_pointer tmp = _root;
@@ -154,6 +156,43 @@ namespace ft
 				return static_cast<node_pointer>(x);
 			}
 
+			template <class U> node_pointer search(const U& toSearch) const
+			{
+				node_pointer np = _root;
+				while(np != nullptr)
+				{
+					if(np->value.first > toSearch)			//np->value.first is the first element of the ~pair~, in fact value has a value_type type, which is the alias for T that is used in pair.hpp
+							np = np->left;
+					else if(np->value.first < toSearch)
+							np = np->right;
+					else if(np->value.first == toSearch)
+						return (np);
+				}
+				return (nullptr);
+			}
+
+			template <class U> iterator find (const U& toFind)
+			{
+				node_pointer np = search(toFind);
+				iterator ret;
+				if(np == nullptr)
+					ret = (iterator)_end;
+				else
+					ret = (iterator)x;
+				return (ret);
+			}
+
+			template <class U> const_iterator find (const U& toFind)
+			{
+				node_pointer np = search(toFind);
+				const_iterator ret;
+				if(np == nullptr)
+					ret = (const_iterator)_end;
+				else
+					ret = (const_iterator)x;
+				return (ret);
+			}
+
 			//Iterators
 			iterator begin() const{ return iterator(_begin); }
 			const_iterator cbegin() const{ return iterator(_begin); }
@@ -162,14 +201,26 @@ namespace ft
 			reverse_iterator rbegin() const{ return reverse_iterator(_end); }
 			reverse_iterator rend() const{ return reverse_iterator(_begin); }
 			
-			//Capacity
+			//Modifiers
 			void clear()
 			{
 				
 			}
+			pair<iterator, bool> insert( const value_type& value )
+			{
+
+			}
+			template< class InputIterator >
+			void insert( InputIterator first, InputIterator last )
+			{
+				
+			}
+
+			//Capacity
 			size_type size() const { return _size; }
             size_type max_size() const { return (_alloc.max_size()); }
 
+			value_compare& value_comp(){ return _comp; }
 			const value_compare& value_comp(){ return _comp; }
 			
 		protected:
