@@ -206,6 +206,15 @@ namespace ft
 			{
 				
 			}
+			void erase( iterator pos )
+			{
+
+			}
+			void erase_rng( iterator first, iterator last )
+			{
+
+			}
+
 			pair<iterator, bool> insert( const value_type& value )
 			{
 
