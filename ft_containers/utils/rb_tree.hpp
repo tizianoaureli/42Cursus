@@ -157,7 +157,7 @@ namespace ft
 			}
 
 			template <class U> node_pointer search(const U& toSearch) const
-			{
+			{ 
 				node_pointer np = _root;
 				while(np != nullptr)
 				{

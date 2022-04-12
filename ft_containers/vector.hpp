@@ -54,7 +54,7 @@ namespace ft{
             {
                 _begin = _alloc.allocate(_capacity);
                 for (size_t i = 0; i < n; i++)
-                    _begin[i] = val;
+                    _alloc.construct(&_begin[i], val);
             }
 
             //Range, constructs a container with as many elements as the range [first, last], each element is the equivalent of its corresponding element in the same order.
@@ -72,7 +72,10 @@ namespace ft{
             //Copy
             vector (const vector& x)
             {
-                *this = x;
+                _capacity = x._capacity;
+                _size = x._size;
+                _begin = _alloc.allocate(_capacity);
+                assign(x._begin, (x._begin + x._size));
             }
 
             //Destroyer
@@ -122,7 +125,7 @@ namespace ft{
                 _size = n;
             }
             size_type capacity() const { return _capacity; }
-            bool empty() const { return(_size != 0 ? 1 : 0); }
+            bool empty() const { return(_size == 0); }
             void reserve (size_type n) 
             {
                 if(n > _capacity && _begin)                       //If vector is already allocated
@@ -131,11 +134,14 @@ namespace ft{
                     {
                         pointer tmp = NULL;
                         tmp = _alloc.allocate(n);
-                        for(size_t i = 0; i < _size; i++)
-                            _alloc.construct((tmp + i), _begin[i]);
+                        for (size_t i = 0; i < _size; i++)
+                                _alloc.construct((tmp + i), _begin[i]);
                         _alloc.deallocate(_begin, _capacity);
+                        _begin = _alloc.allocate(n);
+                        for (size_t i = 0; i < _size; i++)
+                                _alloc.construct((_begin + i), tmp[i]);
                         _capacity = n;
-                        _begin = tmp;
+                        _alloc.deallocate(tmp, n);
                     }
                     catch (std::bad_alloc& ba)
                     {
@@ -157,8 +163,8 @@ namespace ft{
             }
 
             //Element access
-            reference operator[] (size_type n) { return(_begin[n]); }
-            const_reference operator[] (size_type n) const { return(_begin[n]); }
+            reference operator[] (size_type n) { return(this->_begin[n]); }
+            const_reference operator[] (size_type n) const { return(this->_begin[n]); }
             reference at (size_type n)
             {
                 if(n >= _size)
@@ -206,16 +212,16 @@ namespace ft{
             //Pushback
             void push_back (const value_type& val)
             {
-                if (_size + 1 > _capacity)
+                if (_size + 1 >= _capacity)
                     reserve((_capacity + 1) * 2);
-                _size += 1;
-                _alloc.construct((_begin + _size - 1), val);
+                _size ++;
+                _alloc.construct((_begin + _size - 1), val);            
+                _begin[_size - 1] = val;
             }
 
             //Pop_back
             void pop_back()
             {
-                _alloc.destroy(_begin + _size - 1);
                 _size--;
             }
 
@@ -224,7 +230,7 @@ namespace ft{
             iterator insert (iterator position, const value_type& val)
             {
                 size_type pos = 0;
-                for(iterator it = begin(); it != position; ++it)
+                for(iterator it = begin(); it != position; it++)
                     pos++;
                 if((_size + 1) > _capacity)
                     reserve((_capacity + 1) * 2);
@@ -243,20 +249,48 @@ namespace ft{
             //Fill
             void insert (iterator position, size_type n, const value_type& val)
             {
-                for(size_t i = 0; i != n; i++)
-                    position = insert(position, val);
+                size_t pos = 0;
+                for (iterator it = begin(); it != position; ++it)
+                    pos++;
+                if (_size + n > _capacity)
+                    reserve((_size + n) *2);
+                _size += n;
+                size_t index = _size;
+                while (index > pos && (index - n) > pos)
+                {
+                    _begin[index - 1] = _begin[index - n - 1];
+                    index--;
+                }
+                size_t j = 0;
+                while (j < n)
+                {
+                    _begin[pos] = val;
+                    pos++;
+                    j++;
+                }
             }
 
             //Range
             template <class InputIterator>
             void insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
             {
-                InputIterator iter = last;
-                InputIterator end = first;
-                iter--;
-                end--;
-                for( ; iter != end; iter--)
-                    insert(position, *iter);
+                size_t range = 0;
+                for (InputIterator i = first; i != last; ++i)
+                    range++;
+                size_t pos = 0;
+                for (iterator it = begin(); it != position; ++it)
+                    pos++;
+                if (_size + range > _capacity)
+                    reserve((_size + range)*2);
+                _size += range;
+                size_t index = _size;
+                while (index > pos && (index - range) > pos)
+                {
+                    _begin[index - 1] = _begin[index - range - 1];
+                    index--;
+                }
+                for(; first != last; first++, pos++)
+                    _begin[pos] = *first;
             }
 
             //Erase
@@ -306,8 +340,8 @@ namespace ft{
             //Get_allocator
             allocator_type get_allocator() const { return this->_alloc; }
         protected:
-            size_type       _size;                              //It represents how many elements are in the vector
-            size_type       _capacity;                          //It represents how big the actual vector is
+            size_t          _size;                              //It represents how many elements are in the vector
+            size_t          _capacity;                          //It represents how big the actual vector is
             pointer         _begin;                             //Vector that we use to do various actions
             allocator_type  _alloc;                             //Allocator that we use to allocate/deallocate/construct/etc. the vector _begin
 
@@ -316,18 +350,34 @@ namespace ft{
     //Non-member functions
     //Relational operators
     template <class T, class Alloc>
-        bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return(!ft::lexicographical_compare(lhs.beginO(), lhs.end(), rhs.begin(), rhs.end()) && \
-                                                                                    !ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.beginO(), lhs.end())); }
-    template <class T, class Alloc>
-        bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return(lhs != rhs); }
-    template <class T, class Alloc>
-        bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return(ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())); }
-    template <class T, class Alloc>
-        bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return(!ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end())); }
-    template <class T, class Alloc>
-        bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return(ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end())); }
-    template <class T, class Alloc>
-        bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return(!ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())); }
+	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) 
+	{
+		return (!(lhs > rhs) && !(lhs < rhs));
+	}
+
+	template <class T, class Alloc>
+	bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){ return (!(lhs == rhs)); }
+
+	template <class T, class Alloc>
+	bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	}
+
+	template <class T, class Alloc>
+	bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (!(lhs > rhs));
+	}
+		
+	template <class T, class Alloc>
+	bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) 
+	{
+		return (ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end()));	
+	}
+		
+	template <class T, class Alloc>
+	bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return (!(lhs < rhs)); }
     
     //Swap
     template <class T, class Alloc>

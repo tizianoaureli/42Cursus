@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vector.hpp"
+#include <stack>
 
 namespace ft{
     template <class T, class Container = ft::vector<T> >
@@ -18,7 +19,7 @@ namespace ft{
     public:
         explicit stack(const container_type& cntr = container_type()) { this->c = cntr; } 
         ~stack() {}
-        stack(const stack& q) { *this = q; };
+        stack(const stack& q) : c(q.c) {}
 
         stack& operator=(const stack& q) { this->c = q.c; return *this; }
 
