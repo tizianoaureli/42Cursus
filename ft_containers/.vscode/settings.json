@@ -67,6 +67,9 @@
         "tuple": "cpp",
         "typeinfo": "cpp",
         "utility": "cpp",
-        "__undef_macros": "cpp"
+        "__undef_macros": "cpp",
+        "filesystem": "cpp",
+        "set": "cpp",
+        "queue": "cpp"
     }
 }

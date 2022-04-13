@@ -196,7 +196,7 @@ namespace ft{
                 _capacity = new_size * 2;
                 _begin = _alloc.allocate(_capacity);
                 for (size_t i = 0; first != last; first++, i++)
-                    _begin[i] = *first;
+                    _alloc.construct(&_begin[i], *first);
                 _size = new_size;
             }
 
