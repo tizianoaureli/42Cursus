@@ -23,7 +23,7 @@ namespace ft
 		//Member types
 		typedef	T											value_type;
 		typedef size_t  									size_type;
-		typedef value_type*									pointer;
+ 		typedef value_type*									pointer;
 		typedef	value_type	const * 						const_pointer;
 		typedef value_type&									reference;
 		typedef	value_type	const & 						const_reference;
@@ -35,7 +35,7 @@ namespace ft
 		value_type	value;      //Value of the node
 
 		//Functions
-		Node(const_reference val=value_type()): left(nullptr), right(nullptr), parent(nullptr), color(RED), value(val) {}
+		Node(T val): left(nullptr), right(nullptr), parent(nullptr), color(RED), value(val) {}
 		Node(Node const& copy): left(nullptr), right(nullptr), parent(nullptr), color(copy.color), value(copy.value) {}
 
 		bool isThisRightC() { return(parent && this == parent->right); }								//Checks if this node is a right child
@@ -100,6 +100,8 @@ namespace ft
 				insert(x.begin(), x.end());
 				return *this;
 			}
+
+			node_pointer getRoot()	{ return _root; }
 
 			void setBegin()
 			{
@@ -171,6 +173,23 @@ namespace ft
 				return (nullptr);
 			}
 
+			void	find_new_root(node_pointer ptr)
+			{
+				while(ptr->parent)
+					ptr = ptr->parent;
+				_root = ptr;
+			}
+
+			void	find_new_end(node_pointer ptr)
+			{
+				while(ptr->right)
+					ptr = ptr->right;
+				ptr->right = _end;
+				_end->parent = ptr;
+				_end->left = nullptr;
+				_end->right = nullptr;
+			}
+
 			template <class U> iterator find (const U& toFind)
 			{
 				node_pointer np = search(toFind);
@@ -194,31 +213,120 @@ namespace ft
 			}
 
 			//Iterators
-			iterator begin() const{ return iterator(_begin); }
-			const_iterator cbegin() const{ return iterator(_begin); }
-			iterator end() const{ return iterator(_end); }
-			const_iterator cend() const{ return iterator(_end); }
-			reverse_iterator rbegin() const{ return reverse_iterator(_end); }
-			reverse_iterator rend() const{ return reverse_iterator(_begin); }
+			iterator 			begin() const{ return iterator(_begin); }
+			const_iterator 		cbegin() const{ return iterator(_begin); }
+			iterator 			end() const{ return iterator(_end); }
+			const_iterator 		cend() const{ return iterator(_end); }
+			reverse_iterator 	rbegin() const{ return reverse_iterator(_end); }
+			reverse_iterator 	rend() const{ return reverse_iterator(_begin); }
 			
 			//Modifiers
 			void clear()
 			{
-				
+				erase_rng(begin(), end());
+				_size = 0;
+				_begin = _end;
 			}
 			void erase( iterator pos )
 			{
-
+				pointer np = pos.base();
+				iterator r = remove_node_pointer(np);
+				_alloc.deallocate(pos.base(), 1);
+				if(_size > 0)
+					find_new_end(_root);	
 			}
 			void erase_rng( iterator first, iterator last )
 			{
-
+				iterator tmp = first;
+				for( ; tmp <= last ; tmp++)
+					erase(first);
 			}
 
-			pair<iterator, bool> insert( const value_type& value )
+			ft::pair<iterator, bool> insert( const value_type& value )
 			{
-
+				node_pointer new_node = nullptr;						
+				node_pointer ptrToCompare = nullptr;					//it will act as the root (if it exists) and then a node
+				node_pointer takeRoot = getRoot();
+				bool isInserted = false;
+				if (takeRoot != nullptr && _size != 0) 					//if root exists
+				{
+					ptrToCompare = takeRoot;
+					while(true)
+					{
+						if(value_comp()(value, ptrToCompare->value))	//if value is lesser than the root (or the node)
+						{
+							if(ptrToCompare->left != nullptr)			//if there is a left child
+								ptrToCompare = ptrToCompare->left;		//ptrToCompare will move to its left-child
+							else
+							{
+								new_node = newnode(value);
+								new_node->parent = ptrToCompare;
+								ptrToCompare->left = new_node;
+								isInserted = true;
+								break;
+							}
+						}
+						else if(value_comp()(ptrToCompare->value, value))	//if value is greater thant the root (or the node)
+						{
+							if(ptrToCompare->right != nullptr)			//if there is a right child
+								ptrToCompare = ptrToCompare->right;		//ptrToCompare will move to its right-child
+							else
+							{
+								new_node = newnode(value);
+								new_node->parent = ptrToCompare;
+								ptrToCompare->right = new_node;
+								isInserted = true;
+								break;
+							}
+						}
+						else											//if the node with the same value already exists
+						{
+							if(ptrToCompare->left == nullptr && (ptrToCompare->right != nullptr || ptrToCompare->right == nullptr))
+							{
+								new_node = newnode(value);
+								new_node->parent = ptrToCompare;
+								ptrToCompare->left = new_node;
+								isInserted = true;
+								break;
+							}
+							else if(ptrToCompare->left != nullptr && ptrToCompare == nullptr)
+							{
+								new_node = newnode(value);
+								new_node->parent = ptrToCompare;
+								ptrToCompare->right = new_node;
+								isInserted = true;
+								break;
+							}
+							else if(ptrToCompare->left != nullptr && ptrToCompare->right != nullptr)
+								ptrToCompare = ptrToCompare->right;
+						}
+					}
+				}
+				else
+				{
+					_root = newnode(value);
+					node_pointer r = _root;
+					_size++;
+					_root->right = _end;
+					_root->isBlack = BLACK;
+					_end->right = nullptr;
+					_end->left = nullptr;
+					_end->parent = _root;
+					_begin = _root;
+					return ft::pair<iterator,bool>((iterator)r, true);
+				}
+				if(_begin->left != nullptr)
+					_begin = _begin->left;
+				if(inserted == true)
+				{
+					balance_after_insert(takeRoot(), new_node);
+					find_new_root(new_node);
+					_size++;
+				}
+				node_pointer r = new_node;
+				return ft::pair<iterator,bool>((iterator)r, true);
 			}
+
 			template< class InputIterator >
 			void insert( InputIterator first, InputIterator last )
 			{
