@@ -11,12 +11,6 @@
 
 namespace ft
 {
-	enum
-	{
-		BLACK,
-		RED
-	};
-
 	template <typename T>
 	struct Node
 	{
@@ -31,16 +25,13 @@ namespace ft
 		Node		*left;      //Left child of the node
 		Node		*right;     //Right child of the node
 		Node		*parent;    //Parent of the node
-		bool		color;      //Colour of the node (BLACK or RED)
+		bool		is_black;   //Colour of the node (true=BLACK or false=RED)
 		value_type	value;      //Value of the node
 
 		//Functions
-		Node(T val): left(nullptr), right(nullptr), parent(nullptr), color(RED), value(val) {}
-		Node(Node const& copy): left(nullptr), right(nullptr), parent(nullptr), color(copy.color), value(copy.value) {}
+		Node(T val): left(nullptr), right(nullptr), parent(nullptr), is_black(false), value(val) {}
+		Node(Node const& copy): left(nullptr), right(nullptr), parent(nullptr), is_black(copy.is_black), value(copy.value) {}
 
-		bool isThisRightC() { return(parent && this == parent->right); }								//Checks if this node is a right child
-		bool isThisLeftC() { return(parent && this == parent->left); }									//Checks if this node is a left child
-		bool isBlack() { return !(this->color); }														//Checks if the current node is black
 		Node *gramp() { return(parent ? (parent->parent ? parent->parent : nullptr) : nullptr); }		//Returns a Node pointer of this node's grandparent
 		Node *uncle() 																					//Returns a Node pointer of this node's uncle
 		{
@@ -83,7 +74,7 @@ namespace ft
 			RBTree(const value_compare& comp = value_compare(), const allocator_type& alloc = allocator_type()) : 
 				_root(nullptr), _begin(nullptr), _end(_begin), _alloc(alloc), _size(0), _comp(comp) 
 			{
-				_end->color = RED;
+				_end->is_black = false;
 				_end->left = nullptr;
 				_end->parent = nullptr;
 				_end->right = nullptr;
@@ -116,7 +107,7 @@ namespace ft
 				while(tmp->right)
 					tmp = tmp->right;
 				_end = tmp->right;
-				_end->color = BLACK;
+				_end->is_black = true;
 				_end->parent = tmp;
 				_end->value = NULL;
 				_end->right = nullptr;
