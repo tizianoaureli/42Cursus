@@ -80,8 +80,44 @@ namespace ft
 				_end->right = nullptr;
 				_end->value = NULL;
 			}
+			RBTree() : _size(0)
+			{
+				_root = nullptr;
+				_begin = nullptr;
+				_end = _alloc.allocate(1);
+				_end = nullptr;					
+			}
+			explicit RBTree(const value_compare& comp) : _size(0), _comp(comp)
+			{
+				_root = nullptr;
+				_begin = nullptr;
+				_end = _alloc.allocate(1);
+				_end = nullptr;
+			}
+			explicit RBTree(const allocator_type& a) : _alloc(a), _size(0)
+			{
+				_root = nullptr;
+				_begin = nullptr;
+				_end = _alloc.allocate(1);
+				_end = nullptr;					
+			}
+			RBTree(const RBTre& t)
+			{
+				if(this != &t)
+				{
+					_comp = t._comp;
+					if(_alloc != t._alloc)
+						clear();
+					else
+						_alloc = t._alloc;
+					_end = _alloc.allocate(1);
+					for(iter i = t.begin(); i != t.end(); i++)
+						insert(*i);
+				}
+			}
 			~RBTree() {}
 			RBTree(Node &copy) { *this = copy; }
+
 			RBTree& operator=(const RBTree& x)
 			{
 				if(_size != 0)
@@ -92,16 +128,28 @@ namespace ft
 				return *this;
 			}
 
-			node_pointer getRoot()	{ return _root; }
+			//Getters
+			node_pointer 	getRoot()			{ return _root;	}
+			node_pointer 	getBegin()			{ return _begin;}
+			node_pointer 	getEnd()			{ return _end;	}
+			allocator_type&	getAlloc()			{ return _alloc;}
+			value_compare& value_comp()			{ return _comp; }
+			const value_compare& value_comp()	{ return _comp; }
 
-			void setBegin()
+			//Capacity
+			size_type size() const { return _size; }
+            size_type max_size() const { return (_alloc.max_size()); }
+
+			//Setters
+			void	setRoot(node_pointer x) { _root = x; }
+			void 	setBegin()
 			{
 				node_pointer tmp = _root;
 				while(tmp->left)
 					tmp = tmp->left;
 				_begin = tmp;
 			}
-			void setEnd()
+			void 	setEnd()
 			{
 				node_pointer tmp = _root;
 				while(tmp->right)
@@ -111,43 +159,9 @@ namespace ft
 				_end->parent = tmp;
 				_end->value = NULL;
 				_end->right = nullptr;
-				_end->left = nullptr;2
-			}
-			template <class U> Node<U>* newnode(const U& value)
-			{
-				Node<U> *a = _alloc.allocate(1);
-				Node<U> n(value);
-				_alloc.construct(a, n);
-				return (a);
+				_end->left = nullptr;
 			}
 
-			void	setRoot(node_pointer x) { _root = x; };
-
-			template <class U> Node<U>* tree_min()
-			{
-				node_pointer tmp = _root;
-				while(tmp->left)
-					tmp = tmp->left;
-				return (tmp);
-			}
-
-			template <class U> Node<U>* tree_next(node_pointer x)
-			{
-				if(x->right)
-					return tree_min(x->right)
-				else if(x->isThisRightC())
-					x = x->parent;
-				return static_cast<node_pointer>(x);
-			}
-
-			template <class U> Node<U>* tree_prev(node_pointer x)
-			{
-				if(x->left)
-					return tree_max(x->left)
-				else if(x->isThisLeftC())
-					x = x->parent;
-				return static_cast<node_pointer>(x);
-			}
 
 			template <class U> node_pointer search(const U& toSearch) const
 			{ 
@@ -212,6 +226,14 @@ namespace ft
 			reverse_iterator 	rend() const{ return reverse_iterator(_begin); }
 			
 			//Modifiers
+			template <class U> Node<U>* newnode(const U& value)
+			{
+				Node<U> *a = _alloc.allocate(1);
+				Node<U> n(value);
+				_alloc.construct(a, n);
+				return (a);
+			}
+			
 			void clear()
 			{
 				erase_rng(begin(), end());
@@ -323,13 +345,6 @@ namespace ft
 			{
 				
 			}
-
-			//Capacity
-			size_type size() const { return _size; }
-            size_type max_size() const { return (_alloc.max_size()); }
-
-			value_compare& value_comp(){ return _comp; }
-			const value_compare& value_comp(){ return _comp; }
 			
 		protected:
 			node_pointer		_root;
