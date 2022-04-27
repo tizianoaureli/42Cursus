@@ -3,11 +3,11 @@
 #include <iostream>
 #include <memory>
 #include "rb_tree_iterator.hpp"
+#include "rb_tree_funct.hpp"
 #include "enable_if.hpp"
 #include "is_integral.hpp"
 #include "lexicographical_compare.hpp"
 #include "pair.hpp"
-#include <map>
 
 namespace ft
 {
@@ -162,22 +162,6 @@ namespace ft
 				_end->left = nullptr;
 			}
 
-
-			template <class U> node_pointer search(const U& toSearch) const
-			{ 
-				node_pointer np = _root;
-				while(np != nullptr)
-				{
-					if(np->value.first > toSearch)			//np->value.first is the first element of the ~pair~, in fact value has a value_type type, which is the alias for T that is used in pair.hpp
-							np = np->left;
-					else if(np->value.first < toSearch)
-							np = np->right;
-					else if(np->value.first == toSearch)
-						return (np);
-				}
-				return (nullptr);
-			}
-
 			void	find_new_root(node_pointer ptr)
 			{
 				while(ptr->parent)
@@ -195,33 +179,9 @@ namespace ft
 				_end->right = nullptr;
 			}
 
-			template <class U> iterator find (const U& toFind)
-			{
-				node_pointer np = search(toFind);
-				iterator ret;
-				if(np == nullptr)
-					ret = (iterator)_end;
-				else
-					ret = (iterator)x;
-				return (ret);
-			}
-
-			template <class U> const_iterator find (const U& toFind)
-			{
-				node_pointer np = search(toFind);
-				const_iterator ret;
-				if(np == nullptr)
-					ret = (const_iterator)_end;
-				else
-					ret = (const_iterator)x;
-				return (ret);
-			}
-
 			//Iterators
 			iterator 			begin() const{ return iterator(_begin); }
-			const_iterator 		cbegin() const{ return iterator(_begin); }
 			iterator 			end() const{ return iterator(_end); }
-			const_iterator 		cend() const{ return iterator(_end); }
 			reverse_iterator 	rbegin() const{ return reverse_iterator(_end); }
 			reverse_iterator 	rend() const{ return reverse_iterator(_begin); }
 			
@@ -253,6 +213,25 @@ namespace ft
 				iterator tmp = first;
 				for( ; tmp <= last ; tmp++)
 					erase(first);
+			}
+
+			template <class _Key>
+			size_type erase_key(const _Key& __k)
+			{
+				iterator r = find(__k);
+				if (r == end())
+					return (0);
+				erase_position(r);
+				return 1;
+			}
+
+			void swap(__tree& __t)
+			{
+				std::swap(_begin_node, __t._begin_node);
+				std::swap(_end_node, __t._end_node);
+				std::swap(_alloc, __t._alloc);
+				std::swap(_size, __t._size);
+				std::swap(_value_compare, __t._value_compare);
 			}
 
 			ft::pair<iterator, bool> insert( const value_type& value )
@@ -340,12 +319,80 @@ namespace ft
 				return ft::pair<iterator,bool>((iterator)r, true);
 			}
 
-			template< class InputIterator >
-			void insert( InputIterator first, InputIterator last )
+			iterator insert( iterator hint, const value_type& value )
+			{
+				ft::pair<iterator, bool> pos;
+				(void) hint;
+				pos = insert(value);
+				return(pos.first);
+			}
+
+			iterator __remove_node_ptr(node_pointer ptr)
+			{
+				iterator _r(ptr);
+				++_r;
+				if(_begin == ptr)
+					_begin = _r.base();
+				--_size;
+				removePtrTree(root, static_cast<node_pointer>(ptr));
+				find_new_root();
+				return _r;
+			}
+
+			//Map operators
+			template <class key_type>
+			iterator find( const key_type& key )
+			{
+
+			}
+
+			template <class key_type>
+			const_iterator find( const key_type& key ) const
+			{
+
+			}
+
+			template <class key_type>
+			size_type count( const key_type& key ) const
+			{
+
+			}
+
+			template <class key_type>
+			ft::pair<iterator,iterator> equal_range(const key_type& key)
+			{
+
+			}
+
+			template <class key_type>
+			ft::pair<const_iterator,const_iterator> equal_range(const key_type& key) const
+			{
+
+			}
+			
+			template <class key_type>
+			iterator lower_bound( const key_type& key )
+			{
+
+			}
+
+			template <class key_type>
+			const_iterator lower_bound( const key_type& key ) const
 			{
 				
 			}
-			
+
+			template <class key_type>
+			iterator upper_bound( const key_type& key )
+			{
+
+			}
+
+			template <class key_type>
+			const_iterator upper_bound( const key_type& key ) const
+			{
+				
+			}
 		protected:
 			node_pointer		_root;
 			node_pointer		_begin;
