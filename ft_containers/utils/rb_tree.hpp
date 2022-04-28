@@ -343,25 +343,42 @@ namespace ft
 			template <class key_type>
 			iterator find( const key_type& key )
 			{
-
+				iterator ndIt = lower_bound(key);
+				if(!value_comp()(key, *ndIt))
+					return ndIt;
+				return nullptr;
 			}
 
 			template <class key_type>
 			const_iterator find( const key_type& key ) const
 			{
-
+				const_iterator ndIt = lower_bound(key);
+				if(!value_comp()(key, *ndIt))
+					return ndIt;
+				return NULL;
 			}
 
 			template <class key_type>
 			size_type count( const key_type& key ) const
 			{
-
+				size_type count = 0;
+				node_pointer ndPtr = getRoot();
+				while(ndPtr != nullptr)
+				{
+					if(value_comp()(key, ndPtr->pair))
+						ndPtr = ndPtr->left;
+					else if(value_comp()(ndPtr->pair, key))
+						ndPtr = ndPtr->right;
+					else
+						count++;
+				}
+				return count;
 			}
 
 			template <class key_type>
 			ft::pair<iterator,iterator> equal_range(const key_type& key)
 			{
-
+				
 			}
 
 			template <class key_type>
@@ -371,28 +388,119 @@ namespace ft
 			}
 			
 			template <class key_type>
+			iterator __lower_bound(const key_type& key, node_pointer start, node_pointer res)
+			{
+				while(start != nullptr)
+				{
+					if(!value_comp()(start->pair, key))
+					{
+						res = start;
+						start = start->left;
+					}
+					else
+						start = start->right;
+				}
+				return iterator(res);
+			}
+
+			template <class key_type>
+			const_iterator __lower_bound(const key_type& key, node_pointer start, node_pointer res) const
+			{
+				while(start != nullptr)
+				{
+					if(!value_comp()(start->pair, key))
+					{
+						res = start;
+						start = start->left;
+					}
+					else
+						start = start->right;
+				}
+				return const_iterator(res);
+			}
+
+			template <class key_type>
 			iterator lower_bound( const key_type& key )
 			{
-
+				node_pointer ndPtr = getEnd();
+				return iterator(__lower_bound(key, _root, ndPtr));
 			}
 
 			template <class key_type>
 			const_iterator lower_bound( const key_type& key ) const
 			{
-				
+				node_pointer ndPtr = getEnd();
+				return const_iterator(__lower_bound(key, _root, ndPtr));
 			}
 
 			template <class key_type>
 			iterator upper_bound( const key_type& key )
 			{
-
+				node_pointer start = getRoot();
+				node_pointer res = getEnd();
+				While(start != nullptr)
+				{
+					if(value_comp()(start->pair, key))
+					{
+						res = start;
+						start = start->left;
+					}
+					else
+						start = start->right;
+				}
+				return iterator(res);
 			}
 
 			template <class key_type>
 			const_iterator upper_bound( const key_type& key ) const
 			{
-				
+				node_pointer start = getRoot();
+				node_pointer res = getEnd();
+				While(start != nullptr)
+				{
+					if(value_comp()(start->pair, key))
+					{
+						res = start;
+						start = start->left;
+					}
+					else
+						start = start->right;
+				}
+				return const_iterator(res);				
 			}
+
+			template <class key_type>
+			iterator __upper_bound(const key_type& key, node_pointer start, node_pointer res)
+			{
+				While(start != nullptr)
+				{
+					if(value_comp()(start->pair, key))
+					{
+						res = start;
+						start = start->left;
+					}
+					else
+						start = start->right;
+				}
+				return iterator(res);
+			}
+
+			template <class key_type>
+			const_iterator __upper_bound(const key_type& key, node_pointer start, node_pointer res) const
+			{
+				While(start != nullptr)
+				{
+					if(value_comp()(start->pair, key))
+					{
+						res = start;
+						start = start->left;
+					}
+					else
+						start = start->right;
+				}
+				return const_iterator(res);
+			}
+
 		protected:
 			node_pointer		_root;
 			node_pointer		_begin;
