@@ -346,7 +346,7 @@ namespace ft
 				iterator ndIt = lower_bound(key);
 				if(!value_comp()(key, *ndIt))
 					return ndIt;
-				return nullptr;
+				return getEnd();
 			}
 
 			template <class key_type>
@@ -355,7 +355,7 @@ namespace ft
 				const_iterator ndIt = lower_bound(key);
 				if(!value_comp()(key, *ndIt))
 					return ndIt;
-				return NULL;
+				return getEnd();
 			}
 
 			template <class key_type>
@@ -378,13 +378,43 @@ namespace ft
 			template <class key_type>
 			ft::pair<iterator,iterator> equal_range(const key_type& key)
 			{
-				
+				typedef ft::pair<iterator,iterator> doPair;
+				node_pointer start = getRoot();
+				node_pointer res = getEnd();
+				while(root != nullptr)
+				{
+					if(value_comp()(key, start->pair))
+					{
+						res = start;
+						start = start->left;
+					}
+					else if(value_comp()(start->pair, key))
+						root = root->right;
+					else
+						return doPair(__lower_bound(key, start->left, start), __upper_bound(key, start->right, start));
+				}
+				return doPair(iterator(res), iterator(res));
 			}
 
 			template <class key_type>
 			ft::pair<const_iterator,const_iterator> equal_range(const key_type& key) const
 			{
-
+				typedef ft::pair<const_iterator,const_iterator> doPair;
+				node_pointer start = getRoot();
+				node_pointer res = getEnd();
+				while(root != nullptr)
+				{
+					if(value_comp()(key, start->pair))
+					{
+						res = start;
+						start = start->left;
+					}
+					else if(value_comp()(start->pair, key))
+						root = root->right;
+					else
+						return doPair(__lower_bound(key, start->left, start), __upper_bound(key, start->right, start));
+				}
+				return doPair(iterator(res), iterator(res));
 			}
 			
 			template <class key_type>
