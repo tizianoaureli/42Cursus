@@ -5,7 +5,10 @@
 namespace ft
 {
     template <class NodePtr>
-    bool isThisLeftC() { return(parent && this == parent->left); }	//Checks if this node is a left child
+    bool isThisLeftC(NodePtr x) { return(x->parent && x == x->parent->left); }	//Checks if this node is a left child
+
+    template <class NodePtr>
+    bool isThisRightC(NodePtr x) { return(x->parent && x == x->parent->right); }
     
     template <class NodePtr>
 	NodePtr tree_min(NodePtr x)
@@ -54,8 +57,10 @@ namespace ft
             ptr->right->parent = ptr;
         y->parent = ptr->parent;
         if(ptr->isThisLeftC())
+        {
             if(ptr->parent != nullptr)
                 ptr->parent->left = y;
+        }
         else
             ptr->parent->right = y;
         y->left = ptr;
@@ -89,7 +94,7 @@ namespace ft
         {
             if(ptr->parent->isThisLeftChild())          //If so, it checks if the parent is a left child
             {
-                NodePtr y = x->parent->parent->right;   //ptr->parent(P); ptr->parent->parent(G)
+                NodePtr y = ptr->parent->parent->right;   //ptr->parent(P); ptr->parent->parent(G)
                 if(y != nullptr && !y->is_black)        //If the uncle(U) of ptr(Z) exists and is not black
                 {
                     ptr = ptr->parent;

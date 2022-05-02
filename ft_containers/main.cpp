@@ -1,4 +1,4 @@
-//#include "map.hpp"
+#include "map.hpp"
 #include "vector.hpp"
 #include "stack.hpp"
 #include <fstream>
@@ -94,7 +94,6 @@ int main()
 		fileout << "[stack1] : " << stack1.top() << std::endl;
 		stack1.pop();
 	}
-	/*
 	fileout << "\n\n************** TESTING MAP **************\n" << std::endl;
 	namespace::map<int, std::string> map1;
 	map1.insert(namespace::pair<int, std::string>(1, "a"));
@@ -134,5 +133,4 @@ int main()
 	fileout << "max_size : " << map1.max_size() << std::endl;
 	for(it = map1.begin(); it != map1.end(); ++it)
 		fileout << "[map1] key = " << it->first << "  value = " << it->second << std::endl;
-	*/
 }

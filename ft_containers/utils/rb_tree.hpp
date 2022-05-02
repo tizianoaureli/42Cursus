@@ -36,18 +36,18 @@ namespace ft
 		Node *uncle() 																					//Returns a Node pointer of this node's uncle
 		{
 			if(gramp() != nullptr)
-				if(parent->isThisLeftC())
+				if(isThisLeftC(this->parent))
 					return(gramp()->right);
 			if(gramp() != nullptr)
-				if(parent->isThisRightC())
+				if(isThisRightC(this->parent))
 					return(gramp()->left);
 			return nullptr;
 		}
 		Node *sibiling()																				//Returns a Node pointer of this node's sibiling
 		{
-			if(isRight() && parent->left)
+			if(isThisRightC(this) && parent->left)
 				return (parent->left);
-			else if (isLeft() && parent->right)
+			else if (isThisLeftC(this) && parent->right)
 				return (parent->right);
 		}
 	};
@@ -101,7 +101,7 @@ namespace ft
 				_end = _alloc.allocate(1);
 				_end = nullptr;					
 			}
-			RBTree(const RBTre& t)
+			RBTree(const RBTree& t)
 			{
 				if(this != &t)
 				{
@@ -111,12 +111,11 @@ namespace ft
 					else
 						_alloc = t._alloc;
 					_end = _alloc.allocate(1);
-					for(iter i = t.begin(); i != t.end(); i++)
+					for(iterator i = t.begin(); i != t.end(); i++)
 						insert(*i);
 				}
 			}
 			~RBTree() {}
-			RBTree(Node &copy) { *this = copy; }
 
 			RBTree& operator=(const RBTree& x)
 			{
@@ -133,12 +132,13 @@ namespace ft
 			node_pointer 	getBegin()			{ return _begin;}
 			node_pointer 	getEnd()			{ return _end;	}
 			allocator_type&	getAlloc()			{ return _alloc;}
-			value_compare& value_comp()			{ return _comp; }
-			const value_compare& value_comp()	{ return _comp; }
+			value_compare& 	value_comp()		{ return _comp; }
+			const value_compare& value_comp() const	{ return _comp; }
 
 			//Capacity
-			size_type size() const { return _size; }
-            size_type max_size() const { return (_alloc.max_size()); }
+			size_type size() 				{ return _size; }
+			const size_type size() const 	{ return _size; }
+            size_type max_size() const 		{ return (_alloc.max_size()); }
 
 			//Setters
 			void	setRoot(node_pointer x) { _root = x; }
@@ -225,13 +225,13 @@ namespace ft
 				return 1;
 			}
 
-			void swap(__tree& __t)
+			void swap(RBTree& __t)
 			{
-				std::swap(_begin_node, __t._begin_node);
-				std::swap(_end_node, __t._end_node);
+				std::swap(_begin, __t._begin);
+				std::swap(_end, __t._end);
 				std::swap(_alloc, __t._alloc);
 				std::swap(_size, __t._size);
-				std::swap(_value_compare, __t._value_compare);
+				std::swap(_comp, __t._comp);
 			}
 
 			ft::pair<iterator, bool> insert( const value_type& value )
@@ -300,7 +300,7 @@ namespace ft
 					node_pointer r = _root;
 					_size++;
 					_root->right = _end;
-					_root->isBlack = BLACK;
+					_root->is_black = true;
 					_end->right = nullptr;
 					_end->left = nullptr;
 					_end->parent = _root;
@@ -309,7 +309,7 @@ namespace ft
 				}
 				if(_begin->left != nullptr)
 					_begin = _begin->left;
-				if(inserted == true)
+				if(isInserted == true)
 				{
 					balance_after_insert(takeRoot(), new_node);
 					find_new_root(new_node);
@@ -334,7 +334,7 @@ namespace ft
 				if(_begin == ptr)
 					_begin = _r.base();
 				--_size;
-				removePtrTree(root, static_cast<node_pointer>(ptr));
+				removePtrTree(_root, static_cast<node_pointer>(ptr));
 				find_new_root();
 				return _r;
 			}
@@ -381,7 +381,7 @@ namespace ft
 				typedef ft::pair<iterator,iterator> doPair;
 				node_pointer start = getRoot();
 				node_pointer res = getEnd();
-				while(root != nullptr)
+				while(start != nullptr)
 				{
 					if(value_comp()(key, start->pair))
 					{
@@ -389,7 +389,7 @@ namespace ft
 						start = start->left;
 					}
 					else if(value_comp()(start->pair, key))
-						root = root->right;
+						start = start->right;
 					else
 						return doPair(__lower_bound(key, start->left, start), __upper_bound(key, start->right, start));
 				}
@@ -402,7 +402,7 @@ namespace ft
 				typedef ft::pair<const_iterator,const_iterator> doPair;
 				node_pointer start = getRoot();
 				node_pointer res = getEnd();
-				while(root != nullptr)
+				while(start != nullptr)
 				{
 					if(value_comp()(key, start->pair))
 					{
@@ -410,7 +410,7 @@ namespace ft
 						start = start->left;
 					}
 					else if(value_comp()(start->pair, key))
-						root = root->right;
+						start = start->right;
 					else
 						return doPair(__lower_bound(key, start->left, start), __upper_bound(key, start->right, start));
 				}
@@ -468,7 +468,7 @@ namespace ft
 			{
 				node_pointer start = getRoot();
 				node_pointer res = getEnd();
-				While(start != nullptr)
+				while(start != nullptr)
 				{
 					if(value_comp()(start->pair, key))
 					{
@@ -486,7 +486,7 @@ namespace ft
 			{
 				node_pointer start = getRoot();
 				node_pointer res = getEnd();
-				While(start != nullptr)
+				while(start != nullptr)
 				{
 					if(value_comp()(start->pair, key))
 					{
@@ -502,7 +502,7 @@ namespace ft
 			template <class key_type>
 			iterator __upper_bound(const key_type& key, node_pointer start, node_pointer res)
 			{
-				While(start != nullptr)
+				while(start != nullptr)
 				{
 					if(value_comp()(start->pair, key))
 					{
@@ -518,7 +518,7 @@ namespace ft
 			template <class key_type>
 			const_iterator __upper_bound(const key_type& key, node_pointer start, node_pointer res) const
 			{
-				While(start != nullptr)
+				while(start != nullptr)
 				{
 					if(value_comp()(start->pair, key))
 					{
@@ -529,6 +529,25 @@ namespace ft
 						start = start->right;
 				}
 				return const_iterator(res);
+			}
+
+			void _print_tree()
+			{
+				iterator i = begin();
+				while (i != end())
+				{
+					if (i.base() != _root)
+					{
+						if (i.base()->is_black)
+							std::cout << "\033[0;31m" << i.base()->pair << "\033[0;37m -> parent = " << i.base()->parent->pair << std::endl;
+						else
+							std::cout << i.base()->pair << " -> parent = " << i.base()->parent->pair << std::endl;
+					}
+					else
+						std::cout << "ROOT : " << i.base()->pair << std::endl;
+					i++;
+				}
+				std::cout << "\n\n\n";
 			}
 
 		protected:

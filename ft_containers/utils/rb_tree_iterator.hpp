@@ -35,7 +35,7 @@ namespace ft
 				}
 				else
 				{
-					while(ptr->parent->isThisRightC())
+					while(isThisRightC(ptr->parent))
 						ptr = ptr->parent;
 					ptr = ptr->parent;
 				}
