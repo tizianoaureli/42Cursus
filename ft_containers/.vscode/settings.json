@@ -70,6 +70,7 @@
         "__undef_macros": "cpp",
         "filesystem": "cpp",
         "set": "cpp",
-        "queue": "cpp"
+        "queue": "cpp",
+        "memory_resource": "cpp"
     }
 }

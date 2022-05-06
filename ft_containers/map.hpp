@@ -93,72 +93,132 @@ namespace ft
 			_tree = x._tree;
 			return *this;
 		}
-		//Iterators
-		iterator 		begin()	{ return (iterator)_tree.begin(); }
-		const_iterator 	begin() const { return (const_iterator)_tree.cbegin(); }
-		reverse_iterator 		rbegin() { return (reverse_iterator(_tree.end())); }
-		const_reverse_iterator 	rbegin() const { return (const_reverse_iterator(_tree.cend())); }
+		//iteratori
+		iterator root(){return (iterator)(_tree.getRoot());}
 
-		iterator 		end(){	return (iterator)_tree.end();}
-		const_iterator 	end()   const {	return (const_iterator)_tree.cend();}
-		reverse_iterator 		rend() 	{ return (reverse_iterator(_tree.begin())); }
-		const_reverse_iterator	rend()   const { return (const_reverse_iterator(_tree.cbegin())); }
+		iterator 		begin()	{ return (iterator)(_tree.begin()); };
+		const_iterator 	begin() const { return (const_iterator)(_tree.cbegin()); };
+		iterator 		end() 	{ return (iterator)(_tree.end()); };
+		const_iterator 	end() 	const { return (const_iterator)(_tree.cend()); };
 
-		//Capacity
-		bool      empty()    const { return _tree.size() == 0; }
-		size_type size()     const { return _tree.size(); }
-		size_type max_size() const { return _tree.max_size(); }
-
-		//Element access
-		mapped_type& 		operator[](const key_type& k)
+		reverse_iterator rbegin() { return (reverse_iterator)(_tree.rbegin()); };
+		const_reverse_iterator rbegin() const { return (reverse_iterator)(_tree.rbegin()); };
+		reverse_iterator rend() { return (reverse_iterator)(_tree.rend()); };
+		const_reverse_iterator rend() const { return (reverse_iterator)(_tree.rend()); };
+		//capacity
+		bool empty() const { return _tree.size() == 0; };
+		size_type size() const { return (this->_tree.size()); };
+		size_type max_size() const { return (_tree.max_size()); };
+		//element access
+		mapped_type& operator[] (const key_type& k)
 		{
-			iterator i = find(k);
-			if (i != end())
-				return i->second;
-			std::allocator <mapped_type>T_alloc;
-			mapped_type toInsert;
-			T_alloc.construct(&toInsert);
-			pair<key_type, mapped_type> aPair = ft::make_pair(k, toInsert);
-			T_alloc.destroy(&toInsert);
-			return _tree.insert(aPair).first->second;
+			Node<value_type>* x = _tree.search(k);
+			if (x != nullptr)
+				return(x->value.second);
+			else
+				return (*((this->insert(ft::make_pair(k,mapped_type()))).first)).second;
+		}
+		//modifiers
+		pair<iterator,bool> insert (const value_type& val)
+		{
+			return (_tree.insert(val));
+		}
+		iterator insert (iterator position, const value_type& val)
+		{
+			pair<iterator, bool> it;
+			(void)position;
+			it = _tree.insert(val);
+			return (it.first);
+		}
+		template <class InputIterator>
+		void insert (InputIterator first, InputIterator last)
+		{
+			for (InputIterator it = first; it != last; it++)
+				_tree.insert(*it);
+		}
+		void erase (iterator position)
+		{
+			_tree.erase(position);
+		}
+		size_type erase (const key_type& k)
+		{
+			if (find(k) != end())
+			{
+				_tree.erase(find(k));
+				return (1);
+			}
+			return (0);
+		}
+		void erase (iterator first, iterator last)
+		{
+			_tree.erase_range(first, last);
+		}
+		
+
+		void swap (map& x){	_tree.swap(x._tree);}
+		void clear() { _tree.clear();};
+		//observers
+		key_compare    key_comp()      const { return _tree.value_comp().key_comp(); }
+		value_compare  value_comp()    const { return value_compare(_tree.value_comp().key_comp()); }
+		//operation
+		iterator find (const key_type& k) { return (_tree.find(k)); };
+		const_iterator find (const key_type& k) const { return (_tree.find(k)); };
+		size_type count (const key_type& k) const
+		{
+			Node<value_type>* x = _tree.search(k);
+			if (x == nullptr)
+				return(0);
+			return(1);
+		}
+		
+		iterator lower_bound (const key_type& k)
+		{
+			iterator ret;
+			ret = begin();
+			while ((*ret).first < k && ret != end())
+				ret++;
+			return ret;
+		}
+		const_iterator lower_bound (const key_type& k) const
+		{
+			iterator ret;
+			ret = _tree.begin();
+			while ((*ret).first < k && ret != end())
+				ret++;
+			return const_iterator(ret);
+		}
+		iterator upper_bound (const key_type& k)
+		{
+			iterator ret;
+			ret = begin();
+			while ((*ret).first <= k && ret != end())
+				ret++;
+			return ret;
+		}
+		const_iterator upper_bound (const key_type& k) const
+		{
+			iterator ret;
+			ret = _tree.begin();
+			while ((*ret).first <= k && ret != end())
+				ret++;
+			return (const_iterator)ret;
 		}
 
-		//Modifiers
-		void					clear()	{ return _tree.clear(); }
-
-		pair<iterator, bool>	insert(const value_type& value) { return _tree.insert(value); }
-		iterator				insert(iterator hint, const value_type& value) { return _tree.insert(hint, value); }
-		template< class InputIterator >
-		void					insert( InputIterator first, InputIterator last )
+		pair<iterator,iterator>             equal_range (const key_type& k)
 		{
-			for( ; first != last; ++first)
-				insert(*first);
+			iterator low = lower_bound(k);
+			iterator up = upper_bound(k);
+			return(make_pair<iterator, iterator>(low, up));		
 		}
 
-		void					erase( iterator pos ) { _tree.erase(pos); }
-		void 					erase( iterator first, iterator last ) { _tree.erase_rng(first, last); }
-		size_type 				erase( const key_type& key ) { return _tree.erase_key(key); }
-
-		void 					swap (map& x) { return _tree.swap(x._tree); }
-		
-		//Map Operations
-		size_type				count( const key_type& key ) const { return _tree.count(key); }
-
-		iterator				find( const key_type& key ) { return _tree.find(key); }
-		const_iterator			find( const key_type& key ) const { return _tree.find(key); }
-		
-		std::pair<iterator,iterator> 				equal_range( const key_type& key ) { return _tree.equal_range(key); }
-		std::pair<const_iterator,const_iterator> 	equal_range( const key_type& key ) const { return _tree.equal_range(key); }
-
-		iterator 				lower_bound( const key_type& key ) { return _tree.lower_bound(key); }
-		const_iterator 			lower_bound( const key_type& key ) const { return _tree.lower_bound(key); }
-
-		iterator 				upper_bound( const key_type& key ) { return _tree.upper_bound(key); }
-		const_iterator 			upper_bound( const key_type& key ) const { return _tree.upper_bound(key); }
-
-		//Observers
-		key_compare 			key_comp() const { return _tree.value_comp().key_comp(); }
-		value_compare 			value_comp() const { return value_compare(_tree.value_comp().key_comp()); }
+		pair<const_iterator,const_iterator> equal_range (const key_type& k) const
+		{
+			const_iterator low = lower_bound(k);
+			const_iterator up = upper_bound(k);
+			return(make_pair<const_iterator, const_iterator>(low, up));
+		}
+		//getalloc
+		allocator_type get_allocator() const { return this->_alloc;}
 
 		void print(){_tree._print_tree();};
 	protected:

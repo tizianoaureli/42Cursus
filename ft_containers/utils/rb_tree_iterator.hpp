@@ -5,7 +5,7 @@
 
 namespace ft
 {
-    template <class T> struct Node;
+	template <class T> struct Node;
 	template <class _Tp>
 	struct rb_tree_iterator : public ft::iterator<ft::bidirectional_iterator_tag, _Tp>
 	{
@@ -17,136 +17,125 @@ namespace ft
 
 		iterator_type ptr;
 		public:
-            explicit rb_tree_iterator(): ptr(nullptr){}
-            explicit rb_tree_iterator(iterator_type x): ptr(x){}
-            template <class U> rb_tree_iterator(const rb_tree_iterator<U> &copy) { *this = copy; };
+			explicit rb_tree_iterator() : ptr(nullptr){};
+			explicit rb_tree_iterator(iterator_type x) : ptr(x){};
+			template <class U> rb_tree_iterator(const rb_tree_iterator<U> &copy) { *this = copy; };
 			rb_tree_iterator& operator=(const rb_tree_iterator & u) { ptr = u.base(); return *this; };
 			iterator_type base() const { return ptr; };
 			reference operator*() const { return (*ptr).value; };
 			pointer operator->() const { return &(ptr->value); };
-			
-			rb_tree_iterator& operator++()
-			{
-				if(ptr->right != nullptr)
+			rb_tree_iterator& operator++(){
+				if (ptr && ptr->right)
 				{
 					ptr = ptr->right;
-					while(ptr->left)
+					while (ptr->left)
 						ptr = ptr->left;
 				}
 				else
 				{
-					while(isThisRightC(ptr->parent))
+					while (ptr && ptr->isRight() && ptr->parent)
 						ptr = ptr->parent;
 					ptr = ptr->parent;
 				}
 				return (*this);
-			}
-			rb_tree_iterator operator++(int)
-			{
+			};
+			rb_tree_iterator operator++(int){
 				rb_tree_iterator tmp = *this;
 				++*this;
 				return tmp;
-			}
-
-			rb_tree_iterator& operator--()
-			{
-				if(ptr->left)
+			};
+			rb_tree_iterator& operator--(){
+				if (ptr && ptr->left)
 				{
 					ptr = ptr->left;
-					while(ptr->right)
+					while (ptr->right)
 						ptr = ptr->right;
 				}
 				else
 				{
-					while(ptr->parent->isThisLeftC())
+					while (ptr->parent && ptr->isLeft() )
 						ptr = ptr->parent;
 					ptr = ptr->parent;
 				}
-				return(*this);
-			}
-			rb_tree_iterator operator--(int)
-			{
+				return (*this);
+			};
+			rb_tree_iterator operator--(int){
 				rb_tree_iterator tmp = *this;
 				--*this;
 				return tmp;
-			}
+			};
+			friend
+			bool operator==(const rb_tree_iterator &x, const rb_tree_iterator &y){ return (x.ptr == y.ptr); };
+			friend
+			bool operator!=(const rb_tree_iterator &x, const rb_tree_iterator &y){ return !(x == y); };
+	};
 
-			friend bool operator==(const rb_tree_iterator &x, const rb_tree_iterator &y) { return x.base() == y.base(); }
-			friend bool operator!=(const rb_tree_iterator &x, const rb_tree_iterator &y) { return x.base() != y.base(); }
-    };
-
-	template <class T> struct rb_tree_iterator;
+	template <class _Tp> struct rb_tree_iterator;
 	template <class _Tp>
 	struct const_rb_tree_iterator : public ft::iterator<ft::bidirectional_iterator_tag, _Tp>
 	{
-		typedef	struct Node<_Tp>		iterator_value;
-		typedef	const iterator_value*	iterator_type;
-		typedef _Tp                     value_type;
-		typedef const _Tp&             	const_reference;
-		typedef const _Tp*				const_pointer;
-
-		iterator_type ptr;
+			typedef	struct Node<_Tp>		iterator_value;
+			typedef	const iterator_value*	iterator_type;
+			typedef _Tp                     value_type;
+			typedef const _Tp&             	const_reference;
+			typedef const _Tp*				const_pointer;
+			iterator_type ptr;
 		public:
-            explicit const_rb_tree_iterator(): ptr(nullptr){}
-            explicit const_rb_tree_iterator(iterator_type x): ptr(x){}
-            template <class U> const_rb_tree_iterator(const const_rb_tree_iterator<U> &copy) { *this = copy; };
+			explicit const_rb_tree_iterator() : ptr(nullptr){};
+			explicit const_rb_tree_iterator(iterator_type x) : ptr(x){};
+			template <class U> const_rb_tree_iterator(const const_rb_tree_iterator<U> &copy) { *this = copy; };
 			template <class U> const_rb_tree_iterator(const rb_tree_iterator<U> &copy) { *this = copy; };
-			
-			const_rb_tree_iterator& operator=(const const_rb_tree_iterator & u) { ptr = u.base(); return *this; };
+			template <class U> const_rb_tree_iterator& operator=(const rb_tree_iterator<U> & u) { ptr = u.base(); return *this; };
 			const_rb_tree_iterator& operator=(const const_rb_tree_iterator & u) const { ptr = u.base(); return *this; };
-			
+			const_rb_tree_iterator& operator=(const const_rb_tree_iterator & u) { ptr = u.base(); return *this; };
 			iterator_type base() const { return ptr; };
-
 			const_reference operator*() const { return (*ptr).value; };
 			const_pointer operator->() const { return &(ptr->value); };
-			
-			const_rb_tree_iterator& operator++()
-			{
-				if(ptr->right)
+			const_rb_tree_iterator& operator++(){
+				if (ptr && ptr->right)
 				{
 					ptr = ptr->right;
-					while(ptr->left)
+					while (ptr->left)
 						ptr = ptr->left;
 				}
 				else
 				{
-					while(ptr->parent->isThisRightC())
+					while (ptr->isRight() && ptr->parent)
 						ptr = ptr->parent;
 					ptr = ptr->parent;
 				}
 				return (*this);
-			}
-			const_rb_tree_iterator operator++(int)
-			{
+			};
+			const_rb_tree_iterator operator++(int){
 				const_rb_tree_iterator tmp = *this;
 				++*this;
 				return tmp;
-			}
-
-			const_rb_tree_iterator& operator--()
-			{
-				if(ptr->left)
+			};
+			const_rb_tree_iterator& operator--(){
+				if (ptr->left)
 				{
 					ptr = ptr->left;
-					while(ptr->right)
+					while (ptr->right)
 						ptr = ptr->right;
 				}
 				else
 				{
-					while(ptr->parent->isThisLeftC())
+					while (!ptr->isRight() && ptr->parent)
 						ptr = ptr->parent;
 					ptr = ptr->parent;
 				}
-				return(*this);
-			}
-			const_rb_tree_iterator operator--(int)
-			{
+				return (*this);
+			};
+			const_rb_tree_iterator operator--(int){
 				const_rb_tree_iterator tmp = *this;
 				--*this;
 				return tmp;
-			}
-
-			friend bool operator==(const const_rb_tree_iterator &x, const const_rb_tree_iterator &y) { return x.base() == y.base(); }
-			friend bool operator!=(const const_rb_tree_iterator &x, const const_rb_tree_iterator &y) { return x.base() != y.base(); }
+			};
+			friend
+			bool operator==(const const_rb_tree_iterator &x, const const_rb_tree_iterator &y){ return (x.ptr == y.ptr); };
+			friend
+			bool operator!=(const const_rb_tree_iterator &x, const const_rb_tree_iterator &y){ return !(x == y); };
 	};
-}
+
+
+};

@@ -21,7 +21,7 @@ namespace ft
         {
             this->first = other.first;
             this->second = other.second;
-            *this;
+            return *this;
         }
     };
 
